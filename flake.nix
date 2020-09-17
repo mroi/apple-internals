@@ -1,6 +1,14 @@
 {
 	description = "tools to understand the internals of Apple’s operating systems";
 	inputs = {
+		acextract = {
+			url = github:bartoszj/acextract;
+			flake = false;
+		};
+		command-line = {
+			url = github:iHTCboy/CommandLine;
+			flake = false;
+		};
 		snapshot-header = {
 			url = "https://opensource.apple.com/tarballs/xnu/xnu-6153.141.1.tar.gz";
 			flake = false;
@@ -10,8 +18,29 @@
 			flake = false;
 		};
 	};
-	outputs = { self, nixpkgs, snapshot-header, snap-util }: {
-		snap-util = 
+	outputs = { self, nixpkgs, acextract, command-line, snapshot-header, snap-util }: {
+		acextract =
+			with import nixpkgs { system = "x86_64-darwin"; };
+			let platformXcodeBuildHook = makeSetupHook {
+				# FIXME: impurely uses platform Xcode, but there is no proper Swift support in Nix’ xcodebuild
+				deps = [ (writeScriptBin "xcodebuild" ''#!/bin/sh
+					LD=clang
+					exec /usr/bin/xcodebuild "$@"
+				'') ];
+			} "${xcbuildHook}/nix-support/setup-hook";
+			in stdenv.mkDerivation {
+				name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
+				src = acextract;
+				nativeBuildInputs = [ platformXcodeBuildHook ];
+				# FIXME: want to have submodule support for Nix flakes, workaround by explicit instantiation
+				postUnpack = "rmdir source/CommandLine ; ln -s ${command-line} source/CommandLine";
+				installPhase = ''
+					mkdir -p $out/bin
+					cp Products/Release/acextract $out/bin/
+				'';
+				dontStrip = true;
+			};
+		snap-util =
 			with import nixpkgs { system = "x86_64-darwin"; };
 			stdenv.mkDerivation {
 				name = "snap-util-${lib.substring 0 8 self.inputs.snap-util.lastModifiedDate}";
