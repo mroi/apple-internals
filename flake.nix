@@ -21,17 +21,14 @@
 	outputs = { self, nixpkgs, acextract, command-line, snapshot-header, snap-util }: {
 		acextract =
 			with import nixpkgs { system = "x86_64-darwin"; };
-			let platformXcodeBuildHook = makeSetupHook {
-				# FIXME: impurely uses platform Xcode, but there is no proper Swift support in Nix’ xcodebuild
-				deps = [ (writeScriptBin "xcodebuild" ''#!/bin/sh
-					LD=clang
-					exec /usr/bin/xcodebuild "$@"
-				'') ];
+			let xcode12 = makeSetupHook {
+				deps = [ (xcodeenv.composeXcodeWrapper { version = "12.0"; }) ];
 			} "${xcbuildHook}/nix-support/setup-hook";
 			in stdenv.mkDerivation {
 				name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
 				src = acextract;
-				nativeBuildInputs = [ platformXcodeBuildHook ];
+				nativeBuildInputs = [ xcode12 ];
+				preBuild = "LD=$CC";
 				# FIXME: want to have submodule support for Nix flakes, workaround by explicit instantiation
 				postUnpack = "rmdir source/CommandLine ; ln -s ${command-line} source/CommandLine";
 				installPhase = ''
@@ -45,6 +42,7 @@
 			stdenv.mkDerivation {
 				name = "snap-util-${lib.substring 0 8 self.inputs.snap-util.lastModifiedDate}";
 				src = snap-util;
+				nativeBuildInputs = [ (xcodeenv.composeXcodeWrapper { version = "12.0"; }) ];
 				preBuild = "NIX_CFLAGS_COMPILE='-idirafter ${snapshot-header}/bsd'";
 				installPhase = ''
 					mkdir -p $out/bin
@@ -74,7 +72,7 @@
 						</dict>
 						</plist>
 					EOF
-					/usr/bin/codesign -s - --entitlement snapUtil.entitlements $out/bin/.snapUtil-wrapped
+					codesign -s - --entitlement snapUtil.entitlements $out/bin/.snapUtil-wrapped
 				'';
 			};
 	};
