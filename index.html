@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Apple Internals</title>
+<script>
+
+// generate HTML markup from plain text internals document
+class Converter {
+	constructor(text) {
+		this.text = text;
+		this.filter = "";
+	}
+	generate() {
+		// FIXME: placeholder
+		// break down to row, term, definition, statement, word
+		const dl = document.createElement("dl");
+		const dd = document.createElement("dd");
+		const pre = document.createElement("pre");
+		pre.textContent = this.text;
+		dd.append(pre);
+		dl.append(dd);
+		return dl;
+	}
+}
+
+document.addEventListener("DOMContentLoaded", event => {
+	// load main content
+	fetch("internals.txt").then(function(response) {
+		if (!response.ok) return "";
+		return response.text();
+	}).then(function(text) {
+		const converter = new Converter(text);
+		const content = document.getElementById("content");
+		content.append(converter.generate());
+		// update content when typing a filter word
+		document.getElementById("filter").addEventListener("input", event => {
+			// TODO: re-run converter to filter table rows and highlight typed text
+		});
+		// place cursor in filter control
+		document.getElementById("filter").focus();
+	});
+});
+</script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css" integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+<style type="text/css">
+	body {
+		font-size: 90%;
+	}
+</style>
+<body class="container-fluid p-4">
+	<h1 class="mb-3">Apple Internals</h1>
+	<p class="my-0">Collected knowledge about the internals of Apple’s platforms.</p>
+	<p class="my-0">Sorted by keyword, abbreviation, or codename.</p>
+	<p>Feel free to contribute on <a href="https://github.com/mroi/apple-internals">GitHub</a>.</p>
+	<input id="filter" type="text" class="form-control" placeholder="Filter" style="max-width:30em">
+	<div id="content" class="mt-3">
+</body>
