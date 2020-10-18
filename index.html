@@ -10,15 +10,35 @@ class Converter {
 		this.filter = "";
 	}
 	generate() {
-		// FIXME: placeholder
-		// break down to row, term, definition, statement, word
 		const dl = document.createElement("dl");
-		const dd = document.createElement("dd");
-		const pre = document.createElement("pre");
-		pre.textContent = this.text;
-		dd.append(pre);
-		dl.append(dd);
+		dl.setAttribute("class", "row");
+		for (const rowText of this.text.split("\n"))
+			if (rowText.length && rowText.toLowerCase().includes(this.filter.toLowerCase()))
+				dl.append.apply(dl, this.generateRow(rowText));
 		return dl;
+	}
+	generateRow(text) {
+		let result = new Array();
+		const parts = text.split("\t");
+		result.push(this.generateTerm(parts[0]));
+		result.push(this.generateDefinition(parts.slice(1).join("; ")));
+		return result;
+	}
+	generateTerm(text) {
+		const dt = document.createElement("dt");
+		dt.setAttribute("class", "col-sm-2");
+		dt.append(this.highlight(text));
+		return dt;
+	}
+	generateDefinition(text) {
+		const dd = document.createElement("dd");
+		dd.setAttribute("class", "col-sm-10");
+		dd.append(this.highlight(text));
+		return dd;
+	}
+	highlight(text) {
+		// TODO: highlight search text using <mark>
+		return text;
 	}
 }
 
