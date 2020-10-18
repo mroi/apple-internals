@@ -49,14 +49,19 @@ document.addEventListener("DOMContentLoaded", event => {
 		return response.text();
 	}).then(function(text) {
 		const converter = new Converter(text);
-		const content = document.getElementById("content");
-		content.append(converter.generate());
+		const update = filter => {
+			converter.filter = filter;
+			const content = document.getElementById("content");
+			while (content.firstChild) content.firstChild.remove();
+			content.append(converter.generate());
+		};
 		// update content when typing a filter word
 		document.getElementById("filter").addEventListener("input", event => {
-			// TODO: re-run converter to filter table rows and highlight typed text
+			update(event.target.value.length >= 3 ? event.target.value : "");
 		});
 		// place cursor in filter control
 		document.getElementById("filter").focus();
+		update("");
 	});
 });
 </script>
