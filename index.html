@@ -69,6 +69,10 @@ document.addEventListener("DOMContentLoaded", event => {
 		document.getElementById("filter").addEventListener("input", event => {
 			update(event.target.value.length >= 3 ? event.target.value : "");
 		});
+		// select filter text on return
+		document.getElementById("filter").addEventListener("change", event => {
+			event.target.select();
+		});
 		// place cursor in filter control
 		document.getElementById("filter").focus();
 		update("");
