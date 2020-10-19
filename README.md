@@ -12,3 +12,7 @@ Unpacks asset catalogs to individual files.
 
 [**snapUtil**](https://github.com/ahl/apfs)  
 Manages APFS snapshots.
+
+___
+This work is licensed under the [MIT license](https://mit-license.org) so you can freely use 
+and share as long as you retain the copyright notice and license text.
