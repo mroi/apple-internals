@@ -27,18 +27,28 @@ class Converter {
 	generateTerm(text) {
 		const dt = document.createElement("dt");
 		dt.setAttribute("class", "col-sm-2");
-		dt.append(this.highlight(text));
+		dt.append.apply(dt, this.highlight(text));
 		return dt;
 	}
 	generateDefinition(text) {
 		const dd = document.createElement("dd");
 		dd.setAttribute("class", "col-sm-10");
-		dd.append(this.highlight(text));
+		dd.append.apply(dd, this.highlight(text));
 		return dd;
 	}
 	highlight(text) {
-		// TODO: highlight search text using <mark>
-		return text;
+		if (!this.filter.length) return Array(text);
+		let result = new Array();
+		let index = 0;
+		while (index = text.toLowerCase().indexOf(this.filter.toLowerCase()), index >= 0) {
+			result.push(text.substr(0, index));
+			const mark = document.createElement("mark");
+			mark.append(text.substr(index, this.filter.length));
+			result.push(mark);
+			text = text.substr(index + this.filter.length);
+		}
+		result.push(text);
+		return result;
 	}
 }
 
@@ -69,6 +79,12 @@ document.addEventListener("DOMContentLoaded", event => {
 <style type="text/css">
 	body {
 		font-size: 90%;
+	}
+	mark {
+		position: relative;
+		z-index: -1;
+		padding: .2em;
+		margin: -.2em;
 	}
 </style>
 <body class="container-fluid p-4">
