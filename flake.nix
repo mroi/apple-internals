@@ -9,6 +9,10 @@
 			url = github:iHTCboy/CommandLine;
 			flake = false;
 		};
+		dyld-shared-cache = {
+			url = github:antons/dyld-shared-cache-big-sur;
+			flake = false;
+		};
 		snapshot-header = {
 			url = "https://opensource.apple.com/tarballs/xnu/xnu-6153.141.1.tar.gz";
 			flake = false;
@@ -18,7 +22,7 @@
 			flake = false;
 		};
 	};
-	outputs = { self, nixpkgs, acextract, command-line, snapshot-header, snap-util }: {
+	outputs = { self, nixpkgs, acextract, command-line, dyld-shared-cache, snapshot-header, snap-util }: {
 		acextract =
 			with import nixpkgs { system = "x86_64-darwin"; };
 			let xcode12 = makeSetupHook {
@@ -36,6 +40,22 @@
 					cp Products/Release/acextract $out/bin/
 				'';
 				dontStrip = true;
+			};
+		dyld-shared-cache =
+			with import nixpkgs { system = "x86_64-darwin"; };
+			stdenv.mkDerivation {
+				name = "dyld-shared-cache-util-${lib.substring 0 8 self.inputs.dyld-shared-cache.lastModifiedDate}";
+				src = dyld-shared-cache;
+				nativeBuildInputs = [ xcbuildHook ];
+				xcbuildFlags = [
+					"-scheme dyld_shared_cache_util"
+					"-configuration Release"
+					"GCC_PREPROCESSOR_DEFINITIONS=CC_DIGEST_DEPRECATION_WARNING=\\\"\\\""
+				];
+				installPhase = ''
+					mkdir -p $out/bin
+					cp Products/Release/{dsc_extractor.bundle,dyld_shared_cache_util} $out/bin/
+				'';
 			};
 		snap-util =
 			with import nixpkgs { system = "x86_64-darwin"; };

@@ -10,6 +10,9 @@ following externally hosted tools:
 [**acextract**](https://github.com/bartoszj/acextract)  
 Unpacks asset catalogs to individual files.
 
+[**dyld-shared-cache-util**](https://github.com/antons/dyld-shared-cache-big-sur)  
+Extracts dynamic libraries from the dyld linker cache.
+
 [**snapUtil**](https://github.com/ahl/apfs)  
 Manages APFS snapshots.
 
