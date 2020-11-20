@@ -42,6 +42,7 @@ prefix = $$(case $(1) in \
 find = \
 	{ \
 		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
+		cd /Applications/Xcode.app/Contents/Developer ; find Library Toolchains Tools usr $(1) | sed 's|^|macOS /Applications/Xcode.app/Contents/Developer/|' ; \
 		cd $(call prefix,iOS) ; find . $(1) | sed '1d;s/^\./iOS /' ; \
 		cd $(call prefix,tvOS) ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
 		cd $(call prefix,watchOS) ; find . $(1) | sed '1d;s/^\./watchOS /' ; \
