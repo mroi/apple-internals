@@ -45,7 +45,10 @@ find = \
 
 # MARK: - generator targets for database
 
-db_files:
+$(DB_TARGETS)::
+	echo 'BEGIN IMMEDIATE TRANSACTION;'
+
+db_files::
 	if ! csrutil status | grep -Fq disabled ; then \
 		printf '\033[1mdisable SIP to get complete file information\033[m\n' >&2 ; \
 		echo 'FAIL;' ; \
@@ -57,3 +60,6 @@ db_files:
 	$(call find,,sudo) | sed -E "s/'/''/g;s/([^ ]*) (.*)/INSERT INTO files (os, path) VALUES('\1', '\2');/"
 	find $(HOME)/Library | sed "s|^$(HOME)|~|;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('macOS', '&');/"
 	echo 'CREATE INDEX files_path ON files (path);'
+
+$(DB_TARGETS)::
+	echo 'COMMIT TRANSACTION;'
