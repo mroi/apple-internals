@@ -14,6 +14,27 @@ endif
 $(DB):
 	@$(MAKE) --silent --jobs=1 $(DB_TARGETS) | sqlite3 -bail $@
 
+
+# MARK: - data extraction helpers
+
+prefix = $$(case $(1) in \
+	(macOS) ;; \
+	(iOS) echo /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(tvOS) echo /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(watchOS) echo /Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	esac)
+
+find = \
+	{ \
+		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
+		cd $(call prefix,iOS) ; find . $(1) | sed '1d;s/^\./iOS /' ; \
+		cd $(call prefix,tvOS) ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
+		cd $(call prefix,watchOS) ; find . $(1) | sed '1d;s/^\./watchOS /' ; \
+	}
+
+
+# MARK: - generator targets for database
+
 db_files:
 	if ! csrutil status | grep -Fq disabled ; then \
 		printf '\033[1mdisable SIP to get complete file information\033[m\n' >&2 ; \
@@ -23,14 +44,6 @@ db_files:
 	printf '\033[1mcollecting file information...\033[m\n' >&2
 	echo 'DROP TABLE IF EXISTS files;'
 	echo 'CREATE TABLE files (id INTEGER PRIMARY KEY, os TEXT, path TEXT, executable BOOLEAN);'
-	sudo find /Library /System /bin /dev /private /sbin /usr ! \( -path /System/Volumes/Data -prune \) 2> /dev/null | \
-		sed "s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('macOS', '&');/"
-	find $(HOME)/Library | \
-		sed "s|^$(HOME)|~|;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('macOS', '&');/"
-	cd /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot ; find . | \
-		sed "1d;s/\\.//;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('iOS', '&');/"
-	cd /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS.simruntime/Contents/Resources/RuntimeRoot ; find . | \
-		sed "1d;s/\\.//;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('tvOS', '&');/"
-	cd /Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS.simruntime/Contents/Resources/RuntimeRoot ; find . | \
-		sed "1d;s/\\.//;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('watchOS', '&');/"
+	$(call find,,sudo) | sed -E "s/'/''/g;s/([^ ]*) (.*)/INSERT INTO files (os, path) VALUES('\1', '\2');/"
+	find $(HOME)/Library | sed "s|^$(HOME)|~|;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('macOS', '&');/"
 	echo 'CREATE INDEX files_path ON files (path);'
