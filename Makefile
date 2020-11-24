@@ -1,7 +1,7 @@
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
 DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
 DB_TARGETS = db_files db_binaries db_manifests db_assets db_services
-CHECK_TARGETS = check_files check_binaries check_services
+CHECK_TARGETS = check_files check_binaries check_manifests check_services
 
 .PHONY: all check $(DB_TARGETS) $(CHECK_TARGETS)
 .INTERMEDIATE: $(DB)
@@ -158,6 +158,12 @@ check_binaries: internals.txt $(DB)
 	printf '\033[1mchecking servers...\033[m\n' >&2
 	grep -o 'servers\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
 		sed "s/'/''/g;s/.*/SELECT count(*), '&' FROM strings WHERE string GLOB '*&*';/" | \
+		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
+
+check_manifests: internals.txt $(DB)
+	printf '\033[1mchecking extension points...\033[m\n' >&2
+	grep -o 'extension points\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
+		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM info, json_each(plist, '$$.NSExtension') WHERE key = 'NSExtensionPointIdentifier' AND value = '&';|" | \
 		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
 
 check_services: internals.txt $(DB)
