@@ -1,7 +1,7 @@
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
 DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
 DB_TARGETS = db_files db_binaries db_assets db_services
-CHECK_TARGETS = check_files check_binaries
+CHECK_TARGETS = check_files check_binaries check_services
 
 .PHONY: all check $(DB_TARGETS) $(CHECK_TARGETS)
 .INTERMEDIATE: $(DB)
@@ -149,4 +149,14 @@ check_binaries: internals.txt $(DB)
 	printf '\033[1mchecking servers...\033[m\n' >&2
 	grep -o 'servers\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
 		sed "s/'/''/g;s/.*/SELECT count(*), '&' FROM strings WHERE string GLOB '*&*';/" | \
+		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
+
+check_services: internals.txt $(DB)
+	printf '\033[1mchecking launchd services...\033[m\n' >&2
+	grep -o 'launchd services\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
+		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM services, json_each(plist) WHERE key = 'Label' AND value = '&';|" | \
+		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
+	printf '\033[1mchecking special ports...\033[m\n' >&2
+	grep -o '[^ ]* special port [0-9]*' $< | \
+		sed -E "s/'/''/g;s/(host|task) special port ([0-9]+)/SELECT count(*), '&' FROM services, json_tree(plist, '$$.MachServices') WHERE key LIKE '\1SpecialPort' AND value = \2;/" | \
 		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
