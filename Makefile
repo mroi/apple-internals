@@ -1,6 +1,6 @@
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
 DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
-DB_TARGETS = db_files db_binaries db_assets
+DB_TARGETS = db_files db_binaries db_assets db_services
 CHECK_TARGETS = check_files check_binaries
 
 .PHONY: all check $(DB_TARGETS) $(CHECK_TARGETS)
@@ -64,6 +64,7 @@ find = \
 	}
 
 file = SELECT id, $(1) FROM files WHERE os = '$$os' AND path = '$$(echo "$$path" | sed "s/'/''/g")'
+, = , # for entering a literal comma as part of a function argument
 
 
 # MARK: - generator targets for database
@@ -112,6 +113,16 @@ db_assets::
 	$(call find,-type f -name '*.car') | while read -r os path ; do \
 		test -r "$(call prefix,$$os)$$path" && $(ACEXTRACT) --list --input "$(call prefix,$$os)$$path" | \
 			sed "1d;s/'/''/g;s|.*|INSERT INTO assets $(call file,'&');|" ; \
+	done
+
+db_services::
+	printf '\033[1mcollecting launchd service information...\033[m\n' >&2
+	echo 'DROP TABLE IF EXISTS services;'
+	echo 'CREATE TABLE services (id INTEGER REFERENCES files, kind TEXT, plist JSON);'
+	$(call find,-type f -name '*.plist' -path '*/LaunchAgents/*' -o -path '*/LaunchDaemons/*') | while read -r os path ; do \
+		case "$$path" in (*/LaunchAgents/*) kind=agent ;; (*/LaunchDaemons/*) kind=daemon ;; esac ; \
+		test -r "$(call prefix,$$os)$$path" && plutil -convert json "$(call prefix,$$os)$$path" -o - | \
+			sed "s/'/''/g;s|.*|INSERT INTO services $(call file,'$$kind'$(,)json('&'));\n|" ; \
 	done
 
 $(DB_TARGETS)::
