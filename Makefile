@@ -1,18 +1,28 @@
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
-DB = internals-$(shell sw_vers -productVersion).db
+DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
 DB_TARGETS = db_files
 
 .PHONY: all $(DB_TARGETS)
+.INTERMEDIATE: $(DB)
 
-all: internals.txt $(DB)
+all: internals.txt $(DB).lz
 
 ifneq ($(wildcard $(MY_INTERNALS)),)
 internals.txt: $(MY_INTERNALS)
 	textutil -cat txt "$<" -output $@
 endif
 
+ifneq ($(wildcard $(DB).lz),)
+$(DB): $(DB).lz
+	compression_tool -decode -i $< -o $@
+else
 $(DB):
 	@$(MAKE) --silent --jobs=1 $(DB_TARGETS) | sqlite3 -bail $@
+
+$(DB).lz: $(DB)
+	compression_tool -encode -i $< -o $@
+	tmutil addexclusion $@
+endif
 
 
 # MARK: - data extraction helpers
