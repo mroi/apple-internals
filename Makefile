@@ -1,6 +1,6 @@
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
 DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
-DB_TARGETS = db_files db_binaries db_assets db_services
+DB_TARGETS = db_files db_binaries db_manifests db_assets db_services
 CHECK_TARGETS = check_files check_binaries check_services
 
 .PHONY: all check $(DB_TARGETS) $(CHECK_TARGETS)
@@ -104,6 +104,15 @@ db_binaries:: dyld
 			strings -n 8 "$(call prefix,$$os)$$path" | \
 				LANG=C sed "s/'/''/g;s|.*|INSERT INTO strings $(call file,'&');|" ; \
 		fi ; \
+	done
+
+db_manifests::
+	printf '\033[1mcollecting Info.plist information...\033[m\n' >&2
+	echo 'DROP TABLE IF EXISTS info;'
+	echo 'CREATE TABLE info (id INTEGER REFERENCES files, plist JSON);'
+	$(call find,-type f -name 'Info.plist') | while read -r os path ; do \
+		test -r "$(call prefix,$$os)$$path" && plutil -convert json "$(call prefix,$$os)$$path" -o - | \
+			sed "/: invalid object/d;s/'/''/g;s|.*|INSERT INTO info $(call file,json('&'));\n|" ; \
 	done
 
 db_assets::
