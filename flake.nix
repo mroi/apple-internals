@@ -70,7 +70,7 @@
 					cat > $out/bin/snapUtil <<- EOF
 						#!/bin/sh
 						if csrutil status | grep -Fq disabled && sysctl kern.bootargs | grep -Fq amfi_get_out_of_my_way ; then
-							exec $out/bin/.snapUtil-wrapped "\$@"
+							exec -a snapUtil $out/bin/.snapUtil-wrapped "\$@"
 						else
 							echo 'snapUtil requires SIP and AMFI to be disabled:'
 							echo '• boot recovery system'
