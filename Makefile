@@ -1,7 +1,7 @@
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
 DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
 DB_TARGETS = db_files db_binaries
-CHECK_TARGETS = check_files
+CHECK_TARGETS = check_files check_binaries
 
 .PHONY: all check $(DB_TARGETS) $(CHECK_TARGETS)
 .INTERMEDIATE: $(DB)
@@ -112,4 +112,18 @@ check_files: internals.txt $(DB)
 	printf '\033[1mchecking files...\033[m\n' >&2
 	grep -ow '~\?/[^,;]*' $< | sed -E 's/ \(.*\)$$//;s/^\/(etc|var)\//\/private&/' | \
 		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM files WHERE path GLOB '&';|" | \
+		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
+
+check_binaries: internals.txt $(DB)
+	printf '\033[1mchecking command line tools...\033[m\n' >&2
+	grep -o 'command line tools\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
+		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM files WHERE executable = true AND path GLOB '*/&';|" | \
+		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
+	printf '\033[1mchecking frameworks...\033[m\n' >&2
+	grep -ow '[[:alnum:]]*\.framework[[:alnum:]/.]*' $< | \
+		sed "s|/|/*/|g;s/'/''/g;s|.*|SELECT count(*), '&' FROM files WHERE executable = true AND path GLOB '*/&/*';|" | \
+		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
+	printf '\033[1mchecking servers...\033[m\n' >&2
+	grep -o 'servers\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
+		sed "s/'/''/g;s/.*/SELECT count(*), '&' FROM strings WHERE string GLOB '*&*';/" | \
 		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
