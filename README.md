@@ -16,6 +16,16 @@ Extracts dynamic libraries from the dyld linker cache.
 [**snapUtil**](https://github.com/ahl/apfs)  
 Manages APFS snapshots.
 
+The Makefile aggregates various kinds of information from the system in a SQLite database 
+and checks the internals text file against this information. Collected details include:
+
+* all file names of the installed macOS and the iOS, tvOS, and watchOS simulators
+* linkages of binaries to libraries
+* entitlements for all executables
+* plain-text strings embedded in binaries
+* launchd service descriptions and bundle Info.plist content
+* lists of assets inside asset catalogs
+
 ___
 This work is licensed under the [MIT license](https://mit-license.org) so you can freely use 
 and share as long as you retain the copyright notice and license text.
