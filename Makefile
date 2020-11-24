@@ -1,6 +1,6 @@
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
 DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
-DB_TARGETS = db_files
+DB_TARGETS = db_files db_binaries
 CHECK_TARGETS = check_files
 
 .PHONY: all check $(DB_TARGETS) $(CHECK_TARGETS)
@@ -47,6 +47,8 @@ find = \
 		cd $(call prefix,watchOS) ; find . $(1) | sed '1d;s/^\./watchOS /' ; \
 	}
 
+file = SELECT id, $(1) FROM files WHERE os = '$$os' AND path = '$$(echo "$$path" | sed "s/'/''/g")'
+
 
 # MARK: - generator targets for database
 
@@ -65,6 +67,27 @@ db_files::
 	$(call find,,sudo) | sed -E "s/'/''/g;s/([^ ]*) (.*)/INSERT INTO files (os, path) VALUES('\1', '\2');/"
 	find $(HOME)/Library | sed "s|^$(HOME)|~|;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('macOS', '&');/"
 	echo 'CREATE INDEX files_path ON files (path);'
+
+db_binaries::
+	printf '\033[1mcollecting executable information...\033[m\n' >&2
+	echo 'DROP TABLE IF EXISTS linkages;'
+	echo 'DROP TABLE IF EXISTS entitlements;'
+	echo 'DROP TABLE IF EXISTS strings;'
+	echo 'CREATE TABLE linkages (id INTEGER REFERENCES files, dylib TEXT);'
+	echo 'CREATE TABLE entitlements (id INTEGER REFERENCES files, plist JSON);'
+	echo 'CREATE TABLE strings (id INTEGER REFERENCES files, string TEXT);'
+	$(call find,-follow -type f -perm +111) | while read -r os path ; do \
+		echo "UPDATE files SET executable = true WHERE os = '$$os' AND path = '$$path';" ; \
+		if test -r "$(call prefix,$$os)$$path" && file --no-dereference --brief --mime-type "$(call prefix,$$os)$$path" | grep -Fq application/x-mach-binary ; then \
+			objdump --macho --dylibs-used "$(call prefix,$$os)$$path" | \
+				sed "1d;s/^.//;s/ ([^)]*)$$//;s/'/''/g;s|.*|INSERT INTO linkages $(call file,'&');|" ; \
+			codesign --display --entitlements - "$(call prefix,$$os)$$path" 2> /dev/null | \
+				sed 1d | plutil -convert json - -o - | \
+				sed "/^<stdin>: Property List error/d;/^{}/d;s/'/''/g;s|.*|INSERT INTO entitlements $(call file,json('&'));\n|" ; \
+			strings -n 8 "$(call prefix,$$os)$$path" | \
+				LANG=C sed "s/'/''/g;s|.*|INSERT INTO strings $(call file,'&');|" ; \
+		fi ; \
+	done
 
 $(DB_TARGETS)::
 	echo 'COMMIT TRANSACTION;'
