@@ -3,7 +3,7 @@ MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Ap
 DB_TARGETS = db_files db_binaries db_manifests db_assets db_services
 CHECK_TARGETS = check_files check_binaries check_manifests check_services
 
-.PHONY: all check sqlite $(DB_TARGETS) $(CHECK_TARGETS)
+.PHONY: all check view sqlite $(DB_TARGETS) $(CHECK_TARGETS)
 .INTERMEDIATE: $(DB)
 
 all: $(DB).lz check
@@ -29,6 +29,18 @@ endif
 check: internals.txt
 	@LANG=en sort --ignore-case $< | diff -uw $< -
 	@$(MAKE) --silent --jobs=1 $(CHECK_TARGETS)
+
+define VIEW
+SELECT path,os FROM files;
+SELECT path,os,name FROM files NATURAL JOIN assets;
+SELECT path,os,dylib FROM files NATURAL JOIN linkages;
+SELECT files.path,os,key,value FROM files NATURAL JOIN services, json_each(plist);
+SELECT files.path,os,key,value FROM files NATURAL JOIN entitlements, json_each(plist);
+endef
+export VIEW
+
+view: $(DB)
+	echo "$$VIEW" | sqlite3 -bail $< | LC_COLLATE=C sort
 
 sqlite: $(DB)
 	sqlite3 $<
