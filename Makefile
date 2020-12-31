@@ -1,5 +1,5 @@
+override DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
-DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
 DB_TARGETS = db_files db_binaries db_manifests db_assets db_services
 CHECK_TARGETS = check_files check_binaries check_manifests check_services
 
