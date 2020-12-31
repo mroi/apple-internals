@@ -3,7 +3,7 @@ DB := $(if $(DB),$(DB:.lz=),internals-$(shell sw_vers -productVersion).db)
 DB_TARGETS = db_files db_binaries db_manifests db_assets db_services
 CHECK_TARGETS = check_files check_binaries check_manifests check_services
 
-.PHONY: all check $(DB_TARGETS) $(CHECK_TARGETS)
+.PHONY: all check sqlite $(DB_TARGETS) $(CHECK_TARGETS)
 .INTERMEDIATE: $(DB)
 
 all: $(DB).lz check
@@ -29,6 +29,9 @@ endif
 check: internals.txt
 	@LANG=en sort --ignore-case $< | diff -uw $< -
 	@$(MAKE) --silent --jobs=1 $(CHECK_TARGETS)
+
+sqlite: $(DB)
+	sqlite3 $<
 
 
 # MARK: - data extraction helpers
