@@ -69,9 +69,11 @@ document.addEventListener("DOMContentLoaded", event => {
 		document.getElementById("filter").addEventListener("input", event => {
 			update(event.target.value.length >= 3 ? event.target.value : "");
 		});
-		// select filter text on return
+		// select filter text and update URL on return
 		document.getElementById("filter").addEventListener("change", event => {
 			event.target.select();
+			if (history.pushState)
+				history.pushState(null, null, "#" + event.target.value);
 		});
 		// clear filter button
 		document.getElementById("clear").addEventListener("click", event => {
@@ -80,7 +82,12 @@ document.addEventListener("DOMContentLoaded", event => {
 			update("");
 		});
 		// initialize filter control
-		document.getElementById("clear").click();
+		if (location.hash.length) {
+			document.getElementById("filter").value = location.hash.slice(1);
+			document.getElementById("filter").dispatchEvent(new Event("input"));
+		} else {
+			document.getElementById("clear").click();
+		}
 	});
 });
 </script>
