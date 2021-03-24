@@ -99,7 +99,7 @@ db_files:: dyld
 	echo 'CREATE TABLE files (id INTEGER PRIMARY KEY, os TEXT, path TEXT, executable BOOLEAN);'
 	$(call find,,sudo) | sed -E "s/'/''/g;s/([^ ]*) (.*)/INSERT INTO files (os, path) VALUES('\1', '\2');/"
 	find $(HOME)/Library | sed "s|^$(HOME)|~|;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('macOS', '&');/"
-	echo 'CREATE INDEX files_path ON files (path);'
+	echo 'CREATE INDEX _files_path ON files (path);'
 
 db_binaries:: dyld
 	printf '\033[1mcollecting executable information...\033[m\n' >&2
