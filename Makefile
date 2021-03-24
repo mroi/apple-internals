@@ -11,6 +11,7 @@ all: $(DB).lz check
 ifneq ($(wildcard $(MY_INTERNALS)),)
 internals.txt: $(MY_INTERNALS)
 	textutil -cat txt "$<" -output $@
+	xattr -c $@
 endif
 
 ifneq ($(wildcard $(DB).lz),)
