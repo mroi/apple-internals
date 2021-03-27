@@ -44,7 +44,7 @@ view: $(DB)
 	echo "$$VIEW" | sqlite3 -bail $< | LC_COLLATE=C sort
 
 sqlite: $(DB)
-	sqlite3 $<
+	sqlite3 $< || true
 
 
 # MARK: - data extraction helpers
