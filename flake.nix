@@ -2,15 +2,15 @@
 	description = "tools to understand the internals of Apple’s operating systems";
 	inputs = {
 		acextract = {
-			url = github:bartoszj/acextract;
+			url = "github:bartoszj/acextract";
 			flake = false;
 		};
 		command-line = {
-			url = github:iHTCboy/CommandLine;
+			url = "github:iHTCboy/CommandLine";
 			flake = false;
 		};
 		dyld-shared-cache = {
-			url = github:antons/dyld-shared-cache-big-sur;
+			url = "github:antons/dyld-shared-cache-big-sur";
 			flake = false;
 		};
 		snapshot-header = {
@@ -18,7 +18,7 @@
 			flake = false;
 		};
 		snap-util = {
-			url = github:ahl/apfs;
+			url = "github:ahl/apfs";
 			flake = false;
 		};
 	};
