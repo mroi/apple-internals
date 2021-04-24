@@ -18,6 +18,7 @@ ALS	Ambient Light Sensor, AmbientDisplay.framework
 Amber	Swift UI; SwiftUI.framework
 AMFI	Apple Mobile File Integrity, checks code integrity based on code signature, stronger enforcement with hardened runtime, validates entitlement restrictions; launchd service: com.apple.MobileFileIntegrity (amfid, invoked by kernel through host special port 18); disabled by setting amfi_get_out_of_my_way=0x1 in boot-args
 AMP	Apple Media Protocol? former parts of iTunes for iPod and iOS device access in Finder, Home Sharing; AMPDevices.framework, AMPSharing.framework; launchd services: com.apple.AMPDeviceDiscoveryAgent, com.apple.AMPDevicesAgent, com.apple.amp.mediasharingd
+AMP	Asynchronous Multiprocessing; performance and power-efficiency cores on Apple Silicon
 AMX	Apple Matrix Extension; ARM instruction set extension for matrix operations
 Anisette	two-factor authentication creates security codes on trusted devices using TOTP, probably using Circle keys, checked by HSA; AuthKit.framework; launchd service: com.apple.akd
 AOS	Apple Online Services? historical name for iCloud
@@ -37,6 +38,7 @@ Assistant	Siri; dictation and semantic understanding, Intent is communicated to 
 ATS	App Transport Security, sandbox mechanism only allowing TLS-secured connections
 ATSUI	Apple Type Services for Unicode Imaging; rendering engine superseded by CoreText.framework, font management; ApplicationServices.framework/ATS.framework; launchd service: com.apple.xtyped (fontd); command line tools: atsutil
 ATT	App Tracking Transparency; apps declare user tracking on app store
+Attestation	cryptographic proof of connection to genuine remote SEP; GID keys known to Apple, online service verifies and signs a challenge response? used to pair RemoteXPC channel?
 Authorization	discretionary access control policies for high-level services; similar to PAM; policy stored in /var/db/auth.db
 Avatar	Memoji; AvatarKit.framework
 AVB	Audio Video Bridging, low-latency audio over Ethernet; launchd service: com.apple.avbdeviced; command line tool: avbdiagnose, avbutil
@@ -50,7 +52,7 @@ Bonjour	mDNS; launchd service: com.apple.mDNSResponder.reloaded; command line to
 Boot Cache	disk cache pre-heating at boot time with typically loaded applications; /var/db/BootCaches; launchd service: com.apple.warmd
 Boot Policy	decides by signature check which OSes can be booted, boot-time equivalent for System Policy; LocalPolicy stores user settings, configurable from 1TR, stored by SEP, enforced by iBoot; command line tools: bputil, kmutil (to enroll custom kernels)
 BPR	Boot Progress Register; set-only flags to track boot mode (normal, DFU, recovery), part of Keybag class key derivation within SEP, so passcode-protected keys are inaccessible in DFU and recovery
-Bridge	T2 ARM CPU in Intel Macs to drive Touch Bar and Boot Policy; runs bridgeOS, a derivative of watchOS; boots the platform and the Intel CPU, communication from macOS uses RemoteXPC, which uses HTTP/2 over a USB-Ethernet interface; launchd service: com.apple.multiversed, com.apple.remoted; /System/Library/MultiversePlugins; command line tool: remotectl
+Bridge	T2 ARM CPU in Intel Macs to drive Touch Bar and Boot Policy; runs bridgeOS, a derivative of watchOS; boots the platform and the Intel CPU, communication from macOS uses RemoteXPC; launchd service: com.apple.multiversed; /System/Library/MultiversePlugins
 Bulletin Board	application push notification management, aggregates local and remote push notifications; BulletinBoard.framework
 Cache Delete	cleanup for various caches; /System/Library/CacheDelete; launchd service: com.apple.cache_delete (deleted)
 CAML	Core Animation Markup Language; XML file format for layers, shapes and animations
@@ -159,7 +161,7 @@ Manatee	PCS key for some CloudKit containers are synced via CKKS, so data is unr
 Mangrove	transfering UI tiles over XPC; Mangrove.framework, IOSurface.framework
 Marco	Marco.framework, something about IDS and communication (iMessage, Calls), logging?
 Marklar	codename from the PowerPC era for the port to x86, served the transition to Intel CPUs
-Marzipan	Catalyst; port of iOS frameworks to macOS, Catalyst apps are iOS apps with additional API to adapt macOS UI idioms; /System/iOSSupport; integration using UIKit system process; launchd service: com.apple.uikitsystemapp
+Marzipan	Catalyst; port of iOS frameworks to macOS, Catalyst apps are iOS apps with additional API to adapt macOS UI idioms; /System/iOSSupport; integration using UIKit system process; launchd service: com.apple.uikitsystemapp; input remapping by /Library/Apple/Library/Bundles/InputAlternatives.bundle
 MCX	Managed Client for OS X, preference management for settings from configuration profiles, /Library/Managed Preferences, command line tools: mcxquery, mcxrefresh
 MDM	Mobile Device Management; server software to manage fleets of iOS and macOS devices; uses configuration profiles to manage preferences; ConfigurationProfiles.framework
 MDS	Module Directory Services, ancient part of the old security APIs (CSDA, CSSM)
@@ -213,6 +215,7 @@ RAOP	Remote Audio Output Protocol, AirPlay; Bonjour service: _raop._tcp
 Rapport	device pairing by proximity using Alloy, with PIN entry, or using iCloud; once paired, devices can access services; used for HomeKit, HomePod, AirPlay, Home Sharing, SideCar; Rapport.framework; launchd service: com.apple.rapportd; Bonjour service: _companion-link._tcp
 Recents	recently used items (not files) in various applications, synced with Synced Defaults; CoreRecents.framework, /System/Library/Recents; launchd service: com.apple.recentsd
 Relevance Engine	backend for Siri suggestions (for example of Siri Shortcuts), Widget smart stacks (also Siri watch face); consumes Duet knowledge and app-provided timelines with relevance hints; /System/Library/RelevanceEngine; launchd service: com.apple.relevanced
+RemoteXPC	connection to a non-SoC-integrated SEP, like with Bridge or TouchID keyboards; uses HTTP/2 over a network interface, Bridge connected over USB, secured using Attestation; RemoteServiceDiscovery.framework, TrustedAccessory.framework; launchd service: com.apple.remoted, com.apple.tracd; command line tool: remotectl
 Revisions	document autosave and auto-versioning; stored in .DocumentRevisions-V100; GenerationalStorage.framework; launchd service: com.apple.revisiond
 Routine	frequently visited locations on iOS, interacts with Duet; launchd service: com.apple.routined
 RTC	Real-time Telemetry and Crash reporting; RTCReporting.framework; launchd service: com.apple.rtcreportingd
