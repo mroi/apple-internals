@@ -19,6 +19,7 @@ Amber	Swift UI; SwiftUI.framework
 AMFI	Apple Mobile File Integrity, checks code integrity based on code signature, stronger enforcement with hardened runtime, validates entitlement restrictions; launchd service: com.apple.MobileFileIntegrity (amfid, invoked by kernel through host special port 18); disabled by setting amfi_get_out_of_my_way=0x1 in boot-args
 AMP	Apple Media Protocol? former parts of iTunes for iPod and iOS device access in Finder, Home Sharing; AMPDevices.framework, AMPSharing.framework; launchd services: com.apple.AMPDeviceDiscoveryAgent, com.apple.AMPDevicesAgent, com.apple.amp.mediasharingd
 AMP	Asynchronous Multiprocessing; performance and power-efficiency cores on Apple Silicon
+AMS	Apple Media Services; formerly the iTunes stores and media services: App Stores, Apple Music, Apple TV, iCloud media library, Apple Podcasts, Podcast sync, Books Store, Books sync; AppleMediaServices.framework; server: phobos.apple.com
 AMX	Apple Matrix Extension; ARM instruction set extension for matrix operations
 Anisette	two-factor authentication creates security codes on trusted devices using TOTP, probably using Circle keys, checked by HSA; AuthKit.framework; launchd service: com.apple.akd
 AOS	Apple Online Services? historical name for iCloud
@@ -38,7 +39,7 @@ Assistant	Siri; dictation and semantic understanding, Intent is communicated to 
 ATS	App Transport Security, sandbox mechanism only allowing TLS-secured connections
 ATSUI	Apple Type Services for Unicode Imaging; rendering engine superseded by CoreText.framework, font management; ApplicationServices.framework/ATS.framework; launchd service: com.apple.xtyped (fontd); command line tools: atsutil
 ATT	App Tracking Transparency; apps declare user tracking on app store
-Attestation	cryptographic proof of connection to genuine remote SEP; GID keys known to Apple, online service verifies and signs a challenge response? used to pair RemoteXPC channel?
+Attestation	cryptographic proof of connection to genuine remote SEP; used for web authentication; online service signs a GID-based challenge response? used to pair RemoteXPC channel? stripped down variant used to securely identify Touch ID keyboards
 Authorization	discretionary access control policies for high-level services; similar to PAM; policy stored in /var/db/auth.db
 Avatar	Memoji; AvatarKit.framework
 AVB	Audio Video Bridging, low-latency audio over Ethernet; launchd service: com.apple.avbdeviced; command line tool: avbdiagnose, avbutil
@@ -108,12 +109,12 @@ Find My …	location sharing by explicitly querying devices remotely or collater
 Firmlink	bi-directional non-symbolic link between the read-only system volume and the data volume, additional symlinks and mountpoints in the root directory are virtually allocated; /usr/share/firmlinks, /etc/synthetic.conf
 FollowUp	user interaction for Secure Backup wrapping with device passcode, CoreFollowUp.framework; launchd service: com.apple.followupd
 FoundationDB	fundamental iCloud storage database, marketed as CloudKit, separated into containers; records, blobs, and large asset storage with MMCS, server-side continuous queries can trigger push notifications, user management by IDS, sharing between users; PCS keys used for hierarchical zone, record, and asset encryption; CloudKitDaemon.framework; launchd service: com.apple.cloudd; locally stored in ~/Library/Caches/CloudKit, ~/Library/Containers/*/Data/CloudKit
-FPR	Fast Permission Restrictions; Apple CPU registers (APRRs) to downgrade actual permissions of memory pages per thread; used for JIT protection and by AMFI to freeze user code after checking
+FPR	Fast Permission Restrictions; Apple CPU registers to downgrade (old APRRs do bitmasking) or remap (SPRRs since M1) actual permissions of memory pages per thread; used for JIT protection and by AMFI to freeze user code after checking
 FUD	Firmware Update Daemon; /var/db/fud; launchd service: com.apple.MobileAccessoryUpdater
 GID	group ID key, shared across all devices of the same SoC generation, derived keys are used to prove device type over the network, only accessible by SEP
 Gizmo	Apple Watch; watch settings managed by Companion; /Applications/Bridge.app, /System/Library/BridgeManifests
 GSS	Generic Security Service; part of Kerberos; GSS.framework; launchd service: com.apple.gssd (invoked by kernel through host special port 19); command line tool: gsstool
-GXF	Guarded Execution Faults, additional exception levels on Apple Silicon from FPR? implements lightweight intra-address-space protection contexts
+GXF	Guarded Execution Feature/Fault, additional exception levels on Apple Silicon, lateral to the usual exception levels; page tables remain the same, but interpretation of permission bits changes by way of FPR, genter and gexit instructions; implements lightweight intra-address-space protection contexts
 HAP	Home Automation Protocol; CoreHAP.framework
 HDA	High Definition Audio; HDAInterface.framework
 HDI	Hard Disk Image; command line tool: hdiutil
@@ -126,7 +127,7 @@ Hyperion	iCloud Photos, uses CloudKit; launchd service: com.apple.cloudphotod; c
 IAP	iPod Accessory Protocol; IAP.framework
 iBoot	boot loader stage after boot ROM or UEFI (macOS on Intel); intermediate Low-Level Bootloader (LLB); DFU mode is implemented here; /System/Library/CoreServices/boot.efi
 iCDP	iCloud Data Protection, codename for a set of enhancements to iCloud privacy: device passcodes used as iCSC for Secure Backup, root keys for CKKS-enabled services only synced between devices and not stored at Apple; launchd service: com.apple.cdpd
-iCloud	umbrella term for a conglomerate of services, consists of FoundationDB containers with PCS views for key management, supported by CKKS; uses IDS and APNS; some services under the iCloud name are actually served by the iTunes conglomerate or by IMAP or DAV
+iCloud	umbrella term for a conglomerate of services, consists of FoundationDB containers with PCS views for key management, supported by CKKS; uses IDS and APNS; some services under the iCloud name are actually served by AMS, IMAP, or DAV
 iCSC	iCloud Security Code, credential wrapping for Secure Backup, previously used a separate code, with HSA2/iCDP uses device passcodes
 IDAM	Inter-Device Audio and MIDI; audio connection between devices
 IDS	Identity Service, also IDMS, Apple ID identity management for all of Apple’s online services; APNS topics for signaling and messaging, see also Alloy, ESS, FaceTime, iMessage; authentication to services with Kerberos
@@ -138,8 +139,7 @@ Ironwood	dictation, customized on server with selected user data (contacts, app 
 ISP	Image Signal Processor; camera imaging circuit in iPhones
 ITML	iTunes Markup Language; metdata tagging for media services; ITMLKit.framework
 ITP	Intelligent Tracking Prevention, cross-site tracking defenses in Safari, statistics and user interaction classify sites, cookies are partitioned and access is restricted
-iTunes	old umbrella term for a conglomerate of media services: App Stores, Apple Music, Apple TV, iCloud media library, Apple Podcasts, Podcast sync, Books Store, Books sync; server: phobos.apple.com
-JARVIS	Just A Rather Very Intelligent Scheduler, Mesos cluster manager for Siri, iCloud, iTunes
+JARVIS	Just A Rather Very Intelligent Scheduler, Mesos cluster manager for Siri, iCloud, AMS
 Jellyfish	Animoji
 Jetsam	reclaiming of purgeable memory and termination of apps during memory pressure
 JSC	JavaScript Core; JavaScriptCore.framework; command line tool: jsc
@@ -215,11 +215,11 @@ RAOP	Remote Audio Output Protocol, AirPlay; Bonjour service: _raop._tcp
 Rapport	device pairing by proximity using Alloy, with PIN entry, or using iCloud; once paired, devices can access services; used for HomeKit, HomePod, AirPlay, Home Sharing, SideCar; Rapport.framework; launchd service: com.apple.rapportd; Bonjour service: _companion-link._tcp
 Recents	recently used items (not files) in various applications, synced with Synced Defaults; CoreRecents.framework, /System/Library/Recents; launchd service: com.apple.recentsd
 Relevance Engine	backend for Siri suggestions (for example of Siri Shortcuts), Widget smart stacks (also Siri watch face); consumes Duet knowledge and app-provided timelines with relevance hints; /System/Library/RelevanceEngine; launchd service: com.apple.relevanced
-RemoteXPC	connection to a non-SoC-integrated SEP, like with Bridge or TouchID keyboards; uses HTTP/2 over a network interface, Bridge connected over USB, secured using Attestation; RemoteServiceDiscovery.framework, TrustedAccessory.framework; launchd service: com.apple.remoted, com.apple.tracd; command line tool: remotectl
+RemoteXPC	connection to a non-SoC-integrated SEP like Bridge; uses HTTP/2 over a network interface, Bridge connected over USB, secured using Attestation; RemoteServiceDiscovery.framework, TrustedAccessory.framework; launchd service: com.apple.remoted, com.apple.tracd; command line tool: remotectl
 Revisions	document autosave and auto-versioning; stored in .DocumentRevisions-V100; GenerationalStorage.framework; launchd service: com.apple.revisiond
 Routine	frequently visited locations on iOS, interacts with Duet; launchd service: com.apple.routined
 RTC	Real-time Telemetry and Crash reporting; RTCReporting.framework; launchd service: com.apple.rtcreportingd
-RunningBoard	discretionary systemwide runtime management of applications, opted in by frameworks, handles process assertions (frontmost app, see App Nap), memory pressure (see Jetsam) and compute resources (see TAL); launchd service: com.apple.runningboardd; /System/Library/RunningBoard
+RunningBoard	runtime management of apps, paradigm: app as service process invoked by system, check-in by frameworks, handles process assertions (frontmost app, see App Nap), memory pressure (see Jetsam) and compute resources (GPU), replacement for TAL?; launchd service: com.apple.runningboardd; /System/Library/RunningBoard
 SBPL	Sandbox Profile Language; a TinyScheme-based embedded DSL for Seatbelt profiles
 SCIP	System Coprocessor Integrity Protection; like KIP, but for SEP, ISP, Motion coprocessor
 Screen Reader	VoiceOver and Braille; /System/Library/ScreenReader; ScreenReader.framework
@@ -246,6 +246,7 @@ Sock Puppet	Watch interaction that requires Companion device
 SOS	Secure Object Sync; syncing backend for iCloud Keychain, not to be confused with the emergency call feature; transferred items previously staged in Synced Defaults, now uses CKKS; launchd services: com.apple.secd (access to local keychain), com.apple.security.cloudkeychainproxy3 (connects to Synced Defaults), com.apple.security.keychain-circle-notification
 SPI	System Private Interface; /System/Library/PrivateFrameworks
 SpringBoard	iOS home screen; like Dock (Launchpad, Mission Control, desktop picture), Control Center, SystemUIServer (menu extras icons), loginwindow (lock screen), and WindowServer (compositor) on macOS; /System/Library/CoreServices/SpringBoard.app, /Applications/PreBoard.app, BaseBoard.framework, FrontBoard.framework, SplashBoard.framework; launchd service: com.apple.backboardd (compositor)
+SPRR	Shadow Permission Remap Register? feature of Apple Silicon to dynamically reintepret page permissions
 SRP	Secure Remote Password; standard cryptographic protocol for proving knowledge of a secret such that attackers cannot brute-force the secret; AppleSRP.framework
 SSO	Single Sign-On
 SSV	Signed System Volume, als called Authenticated Root Volume (ARV); macOS boots from blessed read-only APFS snapshot, merkle-tree and root-hash stored in Preboot volume; modifications require disabling root authentication with csrutil from recovery, then the live filesystem can be mounted, modified, and re-blessed; command line tools: apfs_systemsnapshot, bless, csrutil
@@ -259,13 +260,14 @@ Synced Defaults	simple key-value store for applications, no user control over da
 System Configuration	SystemConfiguration.framework; launchd service: com.apple.configd; command line tool: scutil
 System Extension	user-level components formerly in the kernel; currently either a DriverKit, Network, or Endpoint Security extension; /System/DriverKit, /System/Library/DriverExtensions; command line tool: systemextensionsctl; launchd services: com.apple.sysextd, com.apple.nesessionmanager, com.apple.endpointsecurity.endpointsecurityd
 System Policy	Gatekeeper; policy engine for application launches and kext loading, malware signatures from /Library/Apple/System/Library/CoreServices/XProtect.bundle; /var/db/SystemPolicy; launchd service: com.apple.security.syspolicy (invoked by kernel through host special port 29); command line tool: spctl
-TAL	Transparent App Lifecycle; app process is started and stopped independently of the user launching and quitting app; also handles session restore across reboots; ~/Library/Saved Application State; launchd service: com.apple.talagent
+TAL	Transparent App Lifecycle; process for macOS apps started and stopped independently of the user launching and quitting app; also handles session restore across reboots; ~/Library/Saved Application State; launchd service: com.apple.talagent
 Taskport	Mach kernel concept for ptrace-like access to task internals; access policy implemented by daemon; launchd service: com.apple.taskgated (invoked by kernel through task special port 9); command line tool: DevToolsSecurity
 TCC	Transparency, Consent, and Control; user control over app access to privacy-related services (kTCCService*); TCC.framework; launchd services: com.apple.tccd, com.apple.tccd.system; command line tool: tccutil; stored in /Library/Application Support/com.apple.TCC, ~/Library/Application Support/com.apple.TCC, /var/db/locationd (for kTCCServiceLocation)
 Time Machine	automatic backup service, command line tools: tmdiagnose, tmutil
 Tin Can	Walkie Talkie on watchOS
 Tones	ringtones; ToneLibrary.framework
 Tourist	backend for user-visible tips and hints; launchd service: com.apple.touristd
+Translocation	app binary copied on launch to dedicated location; initiated by Launch Services for security (prevents path traversal for apps quarantined by System Policy) or path normalization (iOS apps do not expect to be moved, but can be moved on macOS)
 Transparency	key transparency for ESS keys? Transparency.framework; launchd service: com.apple.transparencyd; server: init-kt.apple.com
 TTS	Text To Speech, command line tool: say; /System/Library/Speech; synthesizer engines: MacinTalk (historic), Polyglot (phoneme-based?), Gryphon (current, DNN-based?)
 TVML	TV Markup Language; declarative UI language for TV apps; TVMLKit.framework
