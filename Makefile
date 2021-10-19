@@ -49,12 +49,9 @@ sqlite: $(DB)
 
 # MARK: - data extraction helpers
 
-NIX = $(shell nix-build --no-out-link -A nixFlakes '<nixpkgs>')/bin/nix
-ACEXTRACT = $(shell \
-	$(NIX) --experimental-features 'nix-command flakes' build --no-write-lock-file .\#acextract && \
+ACEXTRACT = $(shell nix build --no-write-lock-file .\#acextract && \
 	readlink result && rm result)/bin/acextract
-DSCU = $(shell \
-	$(NIX) --experimental-features 'nix-command flakes' build --no-write-lock-file .\#dyld-shared-cache && \
+DSCU = $(shell nix build --no-write-lock-file .\#dyld-shared-cache && \
 	readlink result && rm result)/bin/dyld_shared_cache_util
 
 dyld: /System/Library/dyld/dyld_shared_cache_$(shell uname -m)
