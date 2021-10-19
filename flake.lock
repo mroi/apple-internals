@@ -32,19 +32,19 @@
         "type": "github"
       }
     },
-    "dyld-shared-cache": {
+    "dsc-extractor": {
       "flake": false,
       "locked": {
-        "lastModified": 1601538927,
-        "narHash": "sha256-56DevKMzcwN8kAWSKr4qrj9R8WgZVW4RCoktiKKfzR0=",
-        "owner": "antons",
-        "repo": "dyld-shared-cache-big-sur",
-        "rev": "abdd035bdfda33998cc80cd06b625cd99563ca33",
+        "lastModified": 1628793863,
+        "narHash": "sha256-AOwiwoEE8xYzxhkX7RCkLaiArNZAV2GJWbpqLbKOaXY=",
+        "owner": "keith",
+        "repo": "dyld-shared-cache-extractor",
+        "rev": "9ef13238a8f5717165c91291212d6f32617ab67e",
         "type": "github"
       },
       "original": {
-        "owner": "antons",
-        "repo": "dyld-shared-cache-big-sur",
+        "owner": "keith",
+        "repo": "dyld-shared-cache-extractor",
         "type": "github"
       }
     },
@@ -67,7 +67,7 @@
       "inputs": {
         "acextract": "acextract",
         "command-line": "command-line",
-        "dyld-shared-cache": "dyld-shared-cache",
+        "dsc-extractor": "dsc-extractor",
         "nixpkgs": "nixpkgs",
         "snap-util": "snap-util",
         "snapshot-header": "snapshot-header"

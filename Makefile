@@ -51,11 +51,11 @@ sqlite: $(DB)
 
 ACEXTRACT = $(shell nix build --no-write-lock-file .\#acextract && \
 	readlink result && rm result)/bin/acextract
-DSCU = $(shell nix build --no-write-lock-file .\#dyld-shared-cache && \
-	readlink result && rm result)/bin/dyld_shared_cache_util
+DSCEXTRACTOR = $(shell nix build --no-write-lock-file .\#dsc-extractor && \
+	readlink result && rm result)/bin/dyld-shared-cache-extractor
 
 dyld: /System/Library/dyld/dyld_shared_cache_$(shell uname -m)
-	$(DSCU) -extract $@ $<
+	$(DSCEXTRACTOR) $< $@ > /dev/null
 	find $@ -type f -print0 | xargs -0 chmod a+x
 
 XCODE = $(lastword $(wildcard /Applications/Xcode.app /Applications/Xcode-beta.app))

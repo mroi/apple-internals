@@ -9,8 +9,8 @@
 			url = "github:iHTCboy/CommandLine";
 			flake = false;
 		};
-		dyld-shared-cache = {
-			url = "github:antons/dyld-shared-cache-big-sur";
+		dsc-extractor = {
+			url = "github:keith/dyld-shared-cache-extractor";
 			flake = false;
 		};
 		snapshot-header = {
@@ -23,7 +23,7 @@
 		};
 		nixpkgs.url = "flake:nixpkgs/nixpkgs-unstable";
 	};
-	outputs = { self, nixpkgs, acextract, command-line, dyld-shared-cache, snapshot-header, snap-util }: {
+	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snapshot-header, snap-util }: {
 		packages.x86_64-darwin = {
 			acextract =
 				with import nixpkgs { system = "x86_64-darwin"; };
@@ -43,21 +43,12 @@
 					'';
 					dontStrip = true;
 				};
-			dyld-shared-cache =
+			dsc-extractor =
 				with import nixpkgs { system = "x86_64-darwin"; };
-				stdenv.mkDerivation {
-					name = "dyld-shared-cache-util-${lib.substring 0 8 self.inputs.dyld-shared-cache.lastModifiedDate}";
-					src = dyld-shared-cache;
-					nativeBuildInputs = [ xcbuildHook ];
-					xcbuildFlags = [
-						"-scheme dyld_shared_cache_util"
-						"-configuration Release"
-						"GCC_PREPROCESSOR_DEFINITIONS=CC_DIGEST_DEPRECATION_WARNING=\\\"\\\""
-					];
-					installPhase = ''
-						mkdir -p $out/bin
-						cp Products/Release/{dsc_extractor.bundle,dyld_shared_cache_util} $out/bin/
-					'';
+				rustPlatform.buildRustPackage {
+					name = "dsc-extractor-${lib.substring 0 8 self.inputs.dsc-extractor.lastModifiedDate}";
+					src = dsc-extractor;
+					cargoHash = "sha256-Z405Q9gV/mJL2WtCstZ+Y9rEw32zgwU1RiYaAjkIcfw=";
 				};
 			snap-util =
 				with import nixpkgs { system = "x86_64-darwin"; };
