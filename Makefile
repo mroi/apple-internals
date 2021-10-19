@@ -61,18 +61,20 @@ dyld: /System/Library/dyld/dyld_shared_cache_$(shell uname -m)
 	$(DSCU) -extract $@ $<
 	find $@ -type f -print0 | xargs -0 chmod a+x
 
+XCODE = $(lastword $(wildcard /Applications/Xcode.app /Applications/Xcode-beta.app))
+
 prefix = $$(case $(1) in \
 	(macOS) ;; \
 	(macOS-dyld) echo $(dir $(realpath $(firstword $(MAKEFILE_LIST))))/dyld ;; \
-	(iOS) echo /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot ;; \
-	(tvOS) echo /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS.simruntime/Contents/Resources/RuntimeRoot ;; \
-	(watchOS) echo /Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(iOS) echo $(XCODE)/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(tvOS) echo $(XCODE)/Contents/Developer/Platforms/AppleTVOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(watchOS) echo $(XCODE)/Contents/Developer/Platforms/WatchOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS.simruntime/Contents/Resources/RuntimeRoot ;; \
 	esac)
 
 find = \
 	{ \
 		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
-		cd /Applications/Xcode.app/Contents/Developer ; find Library Toolchains Tools usr $(1) | sed 's|^|macOS /Applications/Xcode.app/Contents/Developer/|' ; \
+		cd $(XCODE)/Contents/Developer ; find Library Toolchains Tools usr $(1) | sed 's|^|macOS /Applications/Xcode.app/Contents/Developer/|' ; \
 		test -d "$(call prefix,macOS-dyld)" && cd "$(call prefix,macOS-dyld)" && find . $(1) | sed '1d;s/^\./macOS-dyld /' ; \
 		cd $(call prefix,iOS) ; find . $(1) | sed '1d;s/^\./iOS /' ; \
 		cd $(call prefix,tvOS) ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
