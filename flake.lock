@@ -1,0 +1,106 @@
+{
+  "nodes": {
+    "acextract": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1556467432,
+        "narHash": "sha256-Yh437j5HLwh+s2qBKo3YruBHSJxqH142LuM/Unf+rV4=",
+        "owner": "bartoszj",
+        "repo": "acextract",
+        "rev": "df3b018d53cd4b684a5f6d63535dcc4156be1a97",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bartoszj",
+        "repo": "acextract",
+        "type": "github"
+      }
+    },
+    "command-line": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1556260068,
+        "narHash": "sha256-3BvUfIbbSsv8AHeg+nEjGVNDbgSOf/P7l6EFo+DvE/I=",
+        "owner": "iHTCboy",
+        "repo": "CommandLine",
+        "rev": "b8209dc17ac1dd0f97ebfbd6a77a0633552626ca",
+        "type": "github"
+      },
+      "original": {
+        "owner": "iHTCboy",
+        "repo": "CommandLine",
+        "type": "github"
+      }
+    },
+    "dyld-shared-cache": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1601538927,
+        "narHash": "sha256-56DevKMzcwN8kAWSKr4qrj9R8WgZVW4RCoktiKKfzR0=",
+        "owner": "antons",
+        "repo": "dyld-shared-cache-big-sur",
+        "rev": "abdd035bdfda33998cc80cd06b625cd99563ca33",
+        "type": "github"
+      },
+      "original": {
+        "owner": "antons",
+        "repo": "dyld-shared-cache-big-sur",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1634662205,
+        "narHash": "sha256-DxlM54z+0p7zpTuo4gVGaBlKjEwieqlyOYwT0M23RC4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ef64a9a4fce0f2e482899de68323c27751ba97a3",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "root": {
+      "inputs": {
+        "acextract": "acextract",
+        "command-line": "command-line",
+        "dyld-shared-cache": "dyld-shared-cache",
+        "nixpkgs": "nixpkgs",
+        "snap-util": "snap-util",
+        "snapshot-header": "snapshot-header"
+      }
+    },
+    "snap-util": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1630855703,
+        "narHash": "sha256-r89y29BL/U6LEWhdLPn1TUvFz4IyEg0FexkD3UNdAUU=",
+        "owner": "ahl",
+        "repo": "apfs",
+        "rev": "1cb945d598534bd3a0e26cae04a626993b5e6941",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ahl",
+        "repo": "apfs",
+        "type": "github"
+      }
+    },
+    "snapshot-header": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Y/DTtpnT8JQZO5Ijr+tW0IrIOuECcJ+ZvFLCgwrFt2M=",
+        "type": "tarball",
+        "url": "https://opensource.apple.com/tarballs/xnu/xnu-6153.141.1.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://opensource.apple.com/tarballs/xnu/xnu-6153.141.1.tar.gz"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
