@@ -21,6 +21,7 @@
 			url = "github:ahl/apfs";
 			flake = false;
 		};
+		nixpkgs.url = "flake:nixpkgs/nixpkgs-unstable";
 	};
 	outputs = { self, nixpkgs, acextract, command-line, dyld-shared-cache, snapshot-header, snap-util }: {
 		packages.x86_64-darwin = {
