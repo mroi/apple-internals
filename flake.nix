@@ -37,6 +37,22 @@
 					preBuild = "LD=$CC";
 					# FIXME: want to have submodule support for Nix flakes, workaround by explicit instantiation
 					postUnpack = "rmdir source/CommandLine ; ln -s ${command-line} source/CommandLine";
+					# FIXME: fix for Swift compiler crash
+					patchPhase = ''
+						patch -p0 <<- EOF
+							--- acextract/Operation.swift	2021-10-20 10:35:39.000000000 +0200
+							+++ acextract/Operation.swift	2021-10-20 10:35:46.000000000 +0200
+							@@ -152,7 +152,7 @@
+							             throw ExtractOperationError.cannotCreatePDFDocument
+							         }
+							         // Create the pdf context
+							-        let cgPage = CGPDFDocument.page(cgPDFDocument) as! CGPDFPage // swiftlint:disable:this force_cast
+							+        let cgPage = cgPDFDocument.page(at: 0)!
+							         var cgPageRect = cgPage.getBoxRect(.mediaBox)
+							         let mutableData = NSMutableData()
+							 
+						EOF
+					'';
 					installPhase = ''
 						mkdir -p $out/bin
 						cp Products/Release/acextract $out/bin/
