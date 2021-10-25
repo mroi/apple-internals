@@ -54,8 +54,8 @@ ACEXTRACT = $(shell nix build --no-write-lock-file .\#acextract && \
 DSCEXTRACTOR = $(shell nix build --no-write-lock-file .\#dsc-extractor && \
 	readlink result && rm result)/bin/dyld-shared-cache-extractor
 
-dyld: /System/Library/dyld/dyld_shared_cache_$(shell uname -m)
-	$(DSCEXTRACTOR) $< $@ > /dev/null
+dyld: /System/Library/dyld/dyld_shared_cache_$(shell uname -m) /System/DriverKit/System/Library/dyld/dyld_shared_cache_$(shell uname -m)
+	for i in $+ ; do $(DSCEXTRACTOR) $$i $@ ; done > /dev/null
 	find $@ -type f -print0 | xargs -0 chmod a+x
 
 XCODE = $(lastword $(wildcard /Applications/Xcode.app /Applications/Xcode-beta.app))
