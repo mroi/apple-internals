@@ -98,6 +98,8 @@
 							<dict>
 								<key>com.apple.developer.vfs.snapshot</key>
 								<true/>
+								<key>com.apple.private.apfs.revert-to-snapshot</key>
+								<true/>
 							</dict>
 							</plist>
 						EOF
