@@ -113,8 +113,8 @@ db_binaries:: dyld
 		if test -r "$(call prefix,$$os)$$path" && file --no-dereference --brief --mime-type "$(call prefix,$$os)$$path" | grep -Fq application/x-mach-binary ; then \
 			objdump --macho --dylibs-used "$(call prefix,$$os)$$path" | \
 				sed "1d;s/^.//;s/ ([^)]*)$$//;s/'/''/g;s|.*|INSERT INTO linkages $(call file,'&');|" ; \
-			codesign --display --entitlements - "$(call prefix,$$os)$$path" 2> /dev/null | \
-				sed 1d | plutil -convert json - -o - | \
+			codesign --display --xml --entitlements - "$(call prefix,$$os)$$path" 2> /dev/null | \
+				plutil -convert json - -o - | \
 				sed "/^<stdin>: Property List error/d;/^{}/d;s/'/''/g;s|.*|INSERT INTO entitlements $(call file,json('&'));\n|" ; \
 			strings -n 8 "$(call prefix,$$os)$$path" | \
 				LANG=C sed "s/'/''/g;s|.*|INSERT INTO strings $(call file,'&');|" ; \
