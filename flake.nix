@@ -40,9 +40,27 @@
 					# FIXME: fix for Swift compiler crash
 					patchPhase = ''
 						patch -p0 <<- EOF
+							--- acextract/CoreUI.h
+							+++ acextract/CoreUI.h
+							@@ -24,6 +24,7 @@
+							 //  SOFTWARE.
+
+							 @import Foundation;
+							+@import CoreGraphics;
+
+							 // Hierarchy:
+							 // - CUICatalog:
 							--- acextract/Operation.swift	2021-10-20 10:35:39.000000000 +0200
 							+++ acextract/Operation.swift	2021-10-20 10:35:46.000000000 +0200
-							@@ -152,7 +152,7 @@
+							@@ -24,6 +24,7 @@
+							 //  SOFTWARE.
+
+							 import Foundation
+							+import ImageIO
+
+							 // MARK: - Protocols
+							 protocol Operation {
+							@@ -152,7 +153,7 @@
 							             throw ExtractOperationError.cannotCreatePDFDocument
 							         }
 							         // Create the pdf context
