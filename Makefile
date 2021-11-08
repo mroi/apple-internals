@@ -55,6 +55,11 @@ DSCEXTRACTOR = $(shell nix build --no-write-lock-file .\#dsc-extractor && \
 	readlink result && rm result)/bin/dyld-shared-cache-extractor
 
 dyld: /System/Library/dyld/dyld_shared_cache_$(shell uname -m) /System/DriverKit/System/Library/dyld/dyld_shared_cache_$(shell uname -m)
+	if ! test -x $(DSCEXTRACTOR) ; then \
+		printf '\033[1mdscextractor tool unavailable\033[m\n' >&2 ; \
+		echo 'FAIL;' ; \
+		exit 1 ; \
+	fi
 	for i in $+ ; do $(DSCEXTRACTOR) $$i $@ ; done > /dev/null
 	find $@ -type f -print0 | xargs -0 chmod a+x
 
@@ -131,6 +136,11 @@ db_manifests::
 	done
 
 db_assets::
+	if ! test -x $(ACEXTRACT) ; then \
+		printf '\033[1macextract tool unavailable\033[m\n' >&2 ; \
+		echo 'FAIL;' ; \
+		exit 1 ; \
+	fi
 	printf '\033[1mcollecting asset catalog information...\033[m\n' >&2
 	echo 'DROP TABLE IF EXISTS assets;'
 	echo 'CREATE TABLE assets (id INTEGER REFERENCES files, name TEXT);'
