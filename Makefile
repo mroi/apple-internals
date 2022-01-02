@@ -9,8 +9,9 @@ CHECK_TARGETS = check_files check_binaries check_manifests check_services
 all: $(DB).lz check
 
 ifneq ($(wildcard $(MY_INTERNALS)),)
-internals.txt: $(MY_INTERNALS)
-	textutil -cat txt "$<" -output $@
+internals.tsv: $(MY_INTERNALS)
+	printf 'Term\tDescription\n' > $@
+	textutil -cat txt $@ "$<" -output $@
 	xattr -c $@
 endif
 
@@ -27,8 +28,8 @@ $(DB).lz: $(DB)
 	rm -rf dyld
 endif
 
-check: internals.txt
-	@LANG=en sort --ignore-case $< | diff -uw $< -
+check: internals.tsv
+	@(head --lines=1 ; LANG=en sort --ignore-case) < $< | diff -uw $< -
 	@$(MAKE) --silent --jobs=1 $(CHECK_TARGETS)
 
 define VIEW
@@ -163,15 +164,15 @@ $(DB_TARGETS)::
 	echo 'COMMIT TRANSACTION;'
 
 
-# MARK: - check targets for internals.txt
+# MARK: - check targets for internals.tsv
 
-check_files: internals.txt $(DB)
+check_files: internals.tsv $(DB)
 	printf '\033[1mchecking files...\033[m\n' >&2
 	grep -ow '~\?/[^,;]*' $< | sed -E 's/ \(.*\)$$//;s/^\/(etc|var)\//\/private&/' | \
 		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM files WHERE path GLOB '&';|" | \
 		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
 
-check_binaries: internals.txt $(DB)
+check_binaries: internals.tsv $(DB)
 	printf '\033[1mchecking command line tools...\033[m\n' >&2
 	grep -o 'command line tools\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
 		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM files WHERE executable = true AND path GLOB '*/&';|" | \
@@ -185,13 +186,13 @@ check_binaries: internals.txt $(DB)
 		sed "s/'/''/g;s/.*/SELECT count(*), '&' FROM strings WHERE string GLOB '*&*';/" | \
 		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
 
-check_manifests: internals.txt $(DB)
+check_manifests: internals.tsv $(DB)
 	printf '\033[1mchecking extension points...\033[m\n' >&2
 	grep -o 'extension points\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
 		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM info, json_each(plist, '$$.NSExtension') WHERE key = 'NSExtensionPointIdentifier' AND value = '&';|" | \
 		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
 
-check_services: internals.txt $(DB)
+check_services: internals.tsv $(DB)
 	printf '\033[1mchecking launchd services...\033[m\n' >&2
 	grep -o 'launchd services\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
 		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM services, json_each(plist) WHERE key = 'Label' AND value = '&';|" | \

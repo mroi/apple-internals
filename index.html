@@ -12,7 +12,7 @@ class Converter {
 	generate() {
 		const dl = document.createElement("dl");
 		dl.setAttribute("class", "row");
-		for (const rowText of this.text.split("\n"))
+		for (const rowText of this.text.split("\n").slice(1))
 			if (rowText.length && rowText.toLowerCase().includes(this.filter.toLowerCase()))
 				dl.append.apply(dl, this.generateRow(rowText));
 		return dl;
@@ -54,7 +54,7 @@ class Converter {
 
 document.addEventListener("DOMContentLoaded", event => {
 	// load main content
-	fetch("internals.txt").then(function(response) {
+	fetch("internals.tsv").then(function(response) {
 		if (!response.ok) return "";
 		return response.text();
 	}).then(function(text) {

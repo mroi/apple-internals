@@ -1,3 +1,4 @@
+Term	Description
 1TR	One True Recovery; booting into macOS recovery on Apple Silicon by holding the power button to verify physical presence; enables interaction with SEP to change Boot Policy
 AA	Apple account
 AAC	Automatic Assessment Configuration; AutomaticAssessmentConfiguration.framework; puts device in a locked mode for exam-style test applications
