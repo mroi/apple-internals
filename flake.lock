@@ -35,11 +35,11 @@
     "dsc-extractor": {
       "flake": false,
       "locked": {
-        "lastModified": 1628793863,
-        "narHash": "sha256-AOwiwoEE8xYzxhkX7RCkLaiArNZAV2GJWbpqLbKOaXY=",
+        "lastModified": 1636949004,
+        "narHash": "sha256-5K0CCRx5csFS5yLCWUmkkrKO1Ny3BOwasrrM2fUWgTU=",
         "owner": "keith",
         "repo": "dyld-shared-cache-extractor",
-        "rev": "9ef13238a8f5717165c91291212d6f32617ab67e",
+        "rev": "39b5d773495d99cdfaeab1904e47338b7257c59c",
         "type": "github"
       },
       "original": {
@@ -50,11 +50,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1633422745,
-        "narHash": "sha256-gA6Ok64nPbkjHk3Oanq4641EeYkjcKhisDF9wBjLxEk=",
+        "lastModified": 1647887150,
+        "narHash": "sha256-1TnRvE3qhhafrQnGapaaSVue6nEwRUICkz227TfHHQw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "8e1eab9eae4278c9bb1dcae426848a581943db5a",
+        "rev": "4c3c80df545ec5cb26b5480979c3e3f93518cbe5",
         "type": "github"
       },
       "original": {
@@ -76,11 +76,11 @@
     "snap-util": {
       "flake": false,
       "locked": {
-        "lastModified": 1630855703,
-        "narHash": "sha256-r89y29BL/U6LEWhdLPn1TUvFz4IyEg0FexkD3UNdAUU=",
+        "lastModified": 1647211082,
+        "narHash": "sha256-zQ/0Cpo6CCeKXafeERjBCQ2gv9396c7UZU+VmViQVIc=",
         "owner": "ahl",
         "repo": "apfs",
-        "rev": "1cb945d598534bd3a0e26cae04a626993b5e6941",
+        "rev": "2bcf604966949f618e6a6ce33ca8ae1721494e6d",
         "type": "github"
       },
       "original": {
