@@ -28,7 +28,7 @@
 			acextract =
 				with import nixpkgs { system = "x86_64-darwin"; };
 				let xcode = makeSetupHook {
-					deps = [ (xcodeenv.composeXcodeWrapper { version = "13.3"; }) ];
+					deps = [ (xcodeenv.composeXcodeWrapper { version = "13.4"; }) ];
 				} "${xcbuildHook}/nix-support/setup-hook";
 				in stdenv.mkDerivation {
 					name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
@@ -79,17 +79,17 @@
 				};
 			dsc-extractor =
 				with import nixpkgs { system = "x86_64-darwin"; };
-				rustPlatform.buildRustPackage {
+				stdenv.mkDerivation {
 					name = "dsc-extractor-${lib.substring 0 8 self.inputs.dsc-extractor.lastModifiedDate}";
 					src = dsc-extractor;
-					cargoHash = "sha256-Z405Q9gV/mJL2WtCstZ+Y9rEw32zgwU1RiYaAjkIcfw=";
+					nativeBuildInputs = [ cmake ];
 				};
 			snap-util =
 				with import nixpkgs { system = "x86_64-darwin"; };
 				stdenv.mkDerivation {
 					name = "snap-util-${lib.substring 0 8 self.inputs.snap-util.lastModifiedDate}";
 					src = snap-util;
-					nativeBuildInputs = [ (xcodeenv.composeXcodeWrapper { version = "13.3"; }) ];
+					nativeBuildInputs = [ (xcodeenv.composeXcodeWrapper { version = "13.4"; }) ];
 					preBuild = "NIX_CFLAGS_COMPILE='-idirafter ${snapshot-header}/bsd'";
 					installPhase = ''
 						mkdir -p $out/bin
