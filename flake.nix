@@ -14,21 +14,20 @@
 			flake = false;
 		};
 		snapshot-header = {
-			url = "https://opensource.apple.com/tarballs/xnu/xnu-6153.141.1.tar.gz";
+			url = "https://github.com/apple/darwin-xnu/archive/refs/tags/xnu-6153.141.1.tar.gz";
 			flake = false;
 		};
 		snap-util = {
 			url = "github:ahl/apfs";
 			flake = false;
 		};
-		nixpkgs.url = "flake:nixpkgs/nixpkgs-unstable";
 	};
 	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snapshot-header, snap-util }: {
 		packages.x86_64-darwin = {
 			acextract =
 				with import nixpkgs { system = "x86_64-darwin"; };
 				let xcode = makeSetupHook {
-					deps = [ (xcodeenv.composeXcodeWrapper { version = "13.4"; }) ];
+					deps = [ (xcodeenv.composeXcodeWrapper { version = "14.1"; }) ];
 				} "${xcbuildHook}/nix-support/setup-hook";
 				in stdenv.mkDerivation {
 					name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
@@ -89,7 +88,7 @@
 				stdenv.mkDerivation {
 					name = "snap-util-${lib.substring 0 8 self.inputs.snap-util.lastModifiedDate}";
 					src = snap-util;
-					nativeBuildInputs = [ (xcodeenv.composeXcodeWrapper { version = "13.4"; }) ];
+					nativeBuildInputs = [ (xcodeenv.composeXcodeWrapper { version = "14.1"; }) ];
 					preBuild = "NIX_CFLAGS_COMPILE='-idirafter ${snapshot-header}/bsd'";
 					installPhase = ''
 						mkdir -p $out/bin

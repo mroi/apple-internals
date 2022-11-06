@@ -50,16 +50,15 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1650109093,
-        "narHash": "sha256-tqlnKrAdJktRLXTou9le0oTqrYBAFpGscV5RADdpArU=",
+        "lastModified": 1659782844,
+        "narHash": "sha256-tM/qhHFE61puBxh9ebP3BIG1fkRAT4rHqD3jCM0HXGY=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "faad370edcb37162401be50d45526f52bb16a713",
+        "rev": "c85e56bb060291eac3fb3c75d4e0e64f6836fcfe",
         "type": "github"
       },
       "original": {
         "id": "nixpkgs",
-        "ref": "nixpkgs-unstable",
         "type": "indirect"
       }
     },
@@ -92,13 +91,13 @@
     "snapshot-header": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-Y/DTtpnT8JQZO5Ijr+tW0IrIOuECcJ+ZvFLCgwrFt2M=",
+        "narHash": "sha256-/2aR6n5CbUobwbxkrGqBOAhCZLwDdIsoIOcpALhAUF8=",
         "type": "tarball",
-        "url": "https://opensource.apple.com/tarballs/xnu/xnu-6153.141.1.tar.gz"
+        "url": "https://github.com/apple/darwin-xnu/archive/refs/tags/xnu-6153.141.1.tar.gz"
       },
       "original": {
         "type": "tarball",
-        "url": "https://opensource.apple.com/tarballs/xnu/xnu-6153.141.1.tar.gz"
+        "url": "https://github.com/apple/darwin-xnu/archive/refs/tags/xnu-6153.141.1.tar.gz"
       }
     }
   },
