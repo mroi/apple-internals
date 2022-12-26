@@ -55,7 +55,7 @@ ACEXTRACT = $(shell nix build --no-write-lock-file .\#acextract && \
 DSCEXTRACTOR = $(shell nix build --no-write-lock-file .\#dsc-extractor && \
 	readlink result && rm result)/bin/dyld-shared-cache-extractor
 
-dyld: /System/Library/dyld/dyld_shared_cache_$(shell uname -m) /System/DriverKit/System/Library/dyld/dyld_shared_cache_$(shell uname -m)
+dyld: /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64h /System/Cryptexes/OS/System/DriverKit/System/Library/dyld/dyld_shared_cache_x86_64h
 	if ! test -x $(DSCEXTRACTOR) ; then \
 		printf '\033[1mdscextractor tool unavailable\033[m\n' >&2 ; \
 		echo 'FAIL;' ; \
@@ -70,18 +70,18 @@ prefix = $$(case $(1) in \
 	(macOS) ;; \
 	(macOS-dyld) echo $(dir $(realpath $(firstword $(MAKEFILE_LIST))))/dyld ;; \
 	(iOS) echo $(XCODE)/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot ;; \
-	(tvOS) echo $(XCODE)/Contents/Developer/Platforms/AppleTVOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS.simruntime/Contents/Resources/RuntimeRoot ;; \
-	(watchOS) echo $(XCODE)/Contents/Developer/Platforms/WatchOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(tvOS) echo /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS*.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(watchOS) echo /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS*.simruntime/Contents/Resources/RuntimeRoot ;; \
 	esac)
 
 find = \
 	{ \
-		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
+		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /Library/Developer/CoreSimulator/Volumes -prune \) ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
 		cd $(XCODE)/Contents/Developer ; find Library Toolchains Tools usr $(1) | sed 's|^|macOS /Applications/Xcode.app/Contents/Developer/|' ; \
 		test -d "$(call prefix,macOS-dyld)" && cd "$(call prefix,macOS-dyld)" && find . $(1) | sed '1d;s/^\./macOS-dyld /' ; \
-		cd $(call prefix,iOS) ; find . $(1) | sed '1d;s/^\./iOS /' ; \
-		cd $(call prefix,tvOS) ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
-		cd $(call prefix,watchOS) ; find . $(1) | sed '1d;s/^\./watchOS /' ; \
+		cd "$(call prefix,iOS)" ; find . $(1) | sed '1d;s/^\./iOS /' ; \
+		cd "$(call prefix,tvOS)" ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
+		cd "$(call prefix,watchOS)" ; find . $(1) | sed '1d;s/^\./watchOS /' ; \
 	}
 
 file = SELECT id, $(1) FROM files WHERE os = '$$os' AND path = '$$(echo "$$path" | sed "s/'/''/g")'
