@@ -77,7 +77,7 @@ prefix = $$(case $(1) in \
 find = \
 	{ \
 		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /Library/Developer/CoreSimulator/Volumes -prune \) ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
-		cd $(XCODE)/Contents/Developer ; find Library Toolchains Tools usr $(1) | sed 's|^|macOS /Applications/Xcode.app/Contents/Developer/|' ; \
+		cd $(XCODE)/Contents/Developer ; find * ! \( -path '*/Library/Developer/CoreSimulator' -prune \) $(1) | sed 's|^|macOS /Applications/Xcode.app/Contents/Developer/|' ; \
 		test -d "$(call prefix,macOS-dyld)" && cd "$(call prefix,macOS-dyld)" && find . $(1) | sed '1d;s/^\./macOS-dyld /' ; \
 		cd "$(call prefix,iOS)" ; find . $(1) | sed '1d;s/^\./iOS /' ; \
 		cd "$(call prefix,tvOS)" ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
@@ -135,6 +135,17 @@ db_manifests::
 		test -r "$(call prefix,$$os)$$path" && plutil -convert json "$(call prefix,$$os)$$path" -o - | \
 			sed "/: invalid object/d;s/'/''/g;s|.*|INSERT INTO info $(call file,json('&'));\n|" ; \
 	done
+	$(call find,-type f -name 'TemplateInfo.plist') | while read -r os path ; do \
+		test -r "$(call prefix,$$os)$$path" && { \
+			echo '<dict>' ; \
+			PlistBuddy -c 'Print Definitions:Info.plist\:NSExtension' "$(call prefix,$$os)$$path" ; \
+			PlistBuddy -c 'Print Definitions:Info.plist\:EXAppExtensionAttributes' "$(call prefix,$$os)$$path" ; \
+			PlistBuddy -c 'Print Options:0:Units:Swift:Definitions:Info.plist\:NSExtension' "$(call prefix,$$os)$$path" ; \
+			PlistBuddy -c 'Print Options:0:Units:Swift:Definitions:Info.plist\:EXAppExtensionAttributes' "$(call prefix,$$os)$$path" ; \
+			echo '</dict>' ; \
+		} 2> /dev/null | plutil -convert json - -o - | \
+			sed "/Property List error:/d;s/'/''/g;s|.*|INSERT INTO info $(call file,json('&'));\n|" ; \
+	done
 
 db_assets::
 	if ! test -x $(ACEXTRACT) ; then \
@@ -189,7 +200,7 @@ check_binaries: internals.tsv $(DB)
 check_manifests: internals.tsv $(DB)
 	printf '\033[1mchecking extension points...\033[m\n' >&2
 	grep -o 'extension points\?: [^;]*' $< | sed 's/^[^:]*: //;s/ //g;s/([^)]*)//g' | tr , '\n' | \
-		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM info, json_each(plist, '$$.NSExtension') WHERE key = 'NSExtensionPointIdentifier' AND value = '&';|" | \
+		sed "s/'/''/g;s|.*|SELECT count(*), '&' FROM (SELECT value FROM info, json_each(plist, '$$.NSExtension') WHERE key = 'NSExtensionPointIdentifier' UNION SELECT value FROM info, json_each(plist, '$$.EXAppExtensionAttributes') WHERE key = 'EXExtensionPointIdentifier') WHERE value = '&';|" | \
 		sqlite3 $(DB) | sed -n "/^0|/{s/^0|//;p;}"
 
 check_services: internals.tsv $(DB)
