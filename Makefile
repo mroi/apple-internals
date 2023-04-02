@@ -50,9 +50,9 @@ sqlite: $(DB)
 
 # MARK: - data extraction helpers
 
-ACEXTRACT = $(shell nix build --no-write-lock-file .\#acextract && \
+ACEXTRACT = $(shell nix build --no-write-lock-file --no-warn-dirty .\#acextract && \
 	readlink result && rm result)/bin/acextract
-DSCEXTRACTOR = $(shell nix build --no-write-lock-file .\#dsc-extractor && \
+DSCEXTRACTOR = $(shell nix build --no-write-lock-file --no-warn-dirty .\#dsc-extractor && \
 	readlink result && rm result)/bin/dyld-shared-cache-extractor
 
 dyld: /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64h /System/Cryptexes/OS/System/DriverKit/System/Library/dyld/dyld_shared_cache_x86_64h
