@@ -27,7 +27,7 @@
 			acextract =
 				with import nixpkgs { system = "x86_64-darwin"; };
 				let xcode = makeSetupHook {
-					deps = [ (xcodeenv.composeXcodeWrapper { version = "14.2"; }) ];
+					deps = [ (xcodeenv.composeXcodeWrapper { version = "14.3"; }) ];
 				} "${xcbuildHook}/nix-support/setup-hook";
 				in stdenv.mkDerivation {
 					name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
@@ -88,7 +88,7 @@
 				stdenv.mkDerivation {
 					name = "snap-util-${lib.substring 0 8 self.inputs.snap-util.lastModifiedDate}";
 					src = snap-util;
-					nativeBuildInputs = [ (xcodeenv.composeXcodeWrapper { version = "14.2"; }) ];
+					nativeBuildInputs = [ (xcodeenv.composeXcodeWrapper { version = "14.3"; }) ];
 					preBuild = "NIX_CFLAGS_COMPILE='-idirafter ${snapshot-header}/bsd'";
 					installPhase = ''
 						mkdir -p $out/bin
