@@ -25,12 +25,15 @@
 	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snapshot-header, snap-util }: {
 		packages.x86_64-darwin = let
 			xcode = (nixpkgs.legacyPackages.x86_64-darwin.xcodeenv.composeXcodeWrapper {
-				version = "14.3";
+				version = "14.3.1";
 			}).overrideAttrs (attrs: { __noChroot = true; });
 		in {
 			acextract =
 				with import nixpkgs { system = "x86_64-darwin"; };
-				let xcodeHook = makeSetupHook {	deps = [ xcode ]; } "${xcbuildHook}/nix-support/setup-hook";
+				let xcodeHook = makeSetupHook {
+					name = "xcode-hook";
+					propagatedBuildInputs = [ xcode ];
+				} "${xcbuildHook}/nix-support/setup-hook";
 				in stdenv.mkDerivation {
 					name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
 					src = acextract;
