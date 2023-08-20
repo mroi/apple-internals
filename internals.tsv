@@ -15,7 +15,7 @@ Aegir	astronomy watch face and lock screen; /System/Library/CoreServices/AegirPr
 AGC	Apple Graphics Control, management of multiple displays and display port connections; launchd service: com.apple.displaypolicyd
 AHAP	Apple Haptic Audio Pattern; file format for simultaneous audio and haptic data; CoreHaptics.framework
 AIR	Apple Intermediate Representation; synthetic bytecode architecture target for GPU binary toolchain
-ALF	Application-Level Firewall, launchd service: com.apple.alf (socketfilterfw)
+ALF	Application-Layer Firewall, launchd service: com.apple.alf (socketfilterfw)
 Alloy	substrate for communication between user devices over Bluetooth and devices to iCloud, implemented over IDS; /System/Library/IdentityServices/ServiceDefinitions; launchd service: com.apple.identityservicesd
 ALS	Ambient Light Sensor, AmbientDisplay.framework
 Amber	Swift UI; SwiftUI.framework
@@ -70,7 +70,7 @@ Celestial	media streaming used by ReplayKit for game broadcasts; Celestial.frame
 Certificates	validity checked using CRLs, OCSP stapling, and transparency logs; /System/Library/Security/Certificates.bundle; launchd services: com.apple.trustd, com.apple.trustd.agent, com.apple.ocspd; command line tool: crlrefresh
 Chamois	Stage Manager
 CHIP	Connected Home over IP; Matter; integrated into HomeKit; CHIPPlugin.framework
-Circle	cryptographic primitive to exchange public keys of trusted devices of a user, signed by Circle peers; iCloud identity added as additional Circle peer, private key synced across all trusted devices, new devices can pull this key from Secure Backup to join the Circle; per-device Circles stored in CKKS for two-factor accounts (Octagon); KeychainCircle.framework; command line tools: tpctl, otctl (Octagon)
+Circle	cryptographic primitive to exchange public keys of trusted devices of a user, signed by Circle peers; iCloud identity added as additional Circle peer, private key synced across all trusted devices, new devices can pull this key from Secure Backup to join the Circle; per-device Circles stored in CKKS for two-factor accounts (Octagon); KeychainCircle.framework; command line tools: otctl (Octagon)
 CKKS	CloudKit Key Sync, end-to-end secure syncing for credentials, seeded by Circle; currently includes ApplePay, AutoUnlock, CreditCards, DevicePairing, Engram, Health, Home, Manatee, SOS, WiFi and other keys; launchd service: com.apple.secd; command line tool: ckksctl
 Clarity	customizable accessibility mode for simplified UI; ClarityFoundation.framework
 Classroom	school teachers can create assignments for student iPads and track progress in Schoolwork app; ClassKit.framework; launchd service: com.apple.studentd
@@ -238,6 +238,7 @@ PowerUI	battery management like smart charge and power save, learns from Duet an
 Preferences	storage for user-configurable settings; launchd services: com.apple.cfprefsd.xpc.daemon, com.apple.cfprefsd.xpc.agent; stored in Library/Preferences, command line tool: defaults; interaction with Synced Defaults per /System/Library/DefaultsConfigurations
 Private Relay	two-hop onion routing with one entry and one exit node; Apple operates entry, third-party services operate exit nodes; QUIC for payload, ODoH for DNS, approximate IP geolocation via Waldo, authentication via PAT
 Proactive	umbrella term for suggestions and completions based on Duet forecasting and User Activity context, also marketed as Siri features; PersonalizationPortrait.framework
+Provenance	per-file origin tracking, extended attribute com.apple.provenance stores ID into /var/db/SystemPolicyConfiguration/ExecPolicy
 QoS Classes	inheritable property for Activities; semantic priorities, influences scheduling parameters; initially set at user-level, priority inheritance within GCD queues and across XPC in kernel?
 Quagga	framework for QR and barcode decoding; Quagga.framework
 Quick Action	extension type for quick interaction with foreign content within a host app; extension points: com.apple.services, com.apple.ui-services
@@ -265,6 +266,7 @@ SEP	Secure Enclave Processor; dedicated ARM core for security services, runs L4/
 Sequoia	translation; downloadable language models can run on-device; /Applications/SequoiaTranslator.app, Translation.framework
 Seymour	Apple Fitness+; workout videos integrated with Watch sensors; SeymourCore.framework
 SF Symbols	scalable UI symbols; rendered with various color treatments; SFSymbols.framework
+Shared File List	lists of recently opened files from apps that are stored with Launch Services; command line tool: sfltool; also manages login items and app-installed background daemons
 Shared With You	collaboration features between apps and iMessage; content shared via iMessage is surfaced in apps (Swift Transferable protocol), content in apps can be collaboratively edited and connected to an iMessage group; collaborations are expressed by keys derived from participant device keys, padded with a number of random keys to prevent tracking of device count, a merkle tree of those keys is used to prove inclusion of a specific device to an app; SharedWithYou.framework
 Sharing	umbrella term for wireless proximity services: AirDrop, Continuity, Instant Hotspot, WiFi sharing; used by loginwindow for Watch unlock; Sharing.framework; launchd service: com.apple.sharingd; also serves connection sharing and remote disk
 Shazam	audio (especially music) recognition service; ShazamKit.framework; launchd service: com.apple.shazamd; command line tool: shazam
