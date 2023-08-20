@@ -55,6 +55,11 @@ ACEXTRACT = $(shell nix build --no-write-lock-file --no-warn-dirty .\#acextract 
 DSCEXTRACTOR = $(shell nix build --no-write-lock-file --no-warn-dirty .\#dsc-extractor && \
 	readlink result && rm result)/bin/dyld-shared-cache-extractor
 
+$(DB_TARGETS)::
+	# evaluate helper tools to catch Nix build errors early
+	: $(ACEXTRACT)
+	: $(DSCEXTRACTOR)
+
 dyld: /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64h /System/Cryptexes/OS/System/DriverKit/System/Library/dyld/dyld_shared_cache_x86_64h
 	if ! test -x $(DSCEXTRACTOR) ; then \
 		printf '\033[1mdscextractor tool unavailable\033[m\n' >&2 ; \
