@@ -70,8 +70,8 @@ prefix = $$(case $(1) in \
 	(macOS) ;; \
 	(macOS-dyld) echo $(dir $(realpath $(firstword $(MAKEFILE_LIST))))/dyld ;; \
 	(iOS) echo $(XCODE)/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot ;; \
-	(tvOS) echo /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS*.simruntime/Contents/Resources/RuntimeRoot ;; \
-	(watchOS) echo /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS*.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(tvOS) echo $(wildcard /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS*.simruntime/Contents/Resources/RuntimeRoot) ;; \
+	(watchOS) echo $(wildcard /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS*.simruntime/Contents/Resources/RuntimeRoot) ;; \
 	esac)
 
 find = \
