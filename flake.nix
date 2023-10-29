@@ -25,7 +25,7 @@
 	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snapshot-header, snap-util }: {
 		packages.x86_64-darwin = let
 			xcode = (nixpkgs.legacyPackages.x86_64-darwin.xcodeenv.composeXcodeWrapper {
-				version = "14.3.1";
+				version = "15.0.1";
 			}).overrideAttrs (attrs: { __noChroot = true; });
 		in {
 			acextract =
