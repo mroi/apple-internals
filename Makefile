@@ -74,7 +74,7 @@ XCODE = $(lastword $(wildcard /Applications/Xcode.app /Applications/Xcode-beta.a
 prefix = $$(case $(1) in \
 	(macOS) ;; \
 	(macOS-dyld) echo $(dir $(realpath $(firstword $(MAKEFILE_LIST))))/dyld ;; \
-	(iOS) echo $(XCODE)/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(iOS) echo $(wildcard /Library/Developer/CoreSimulator/Volumes/iOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS*.simruntime/Contents/Resources/RuntimeRoot) ;; \
 	(tvOS) echo $(wildcard /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS*.simruntime/Contents/Resources/RuntimeRoot) ;; \
 	(watchOS) echo $(wildcard /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS*.simruntime/Contents/Resources/RuntimeRoot) ;; \
 	esac)
@@ -82,7 +82,7 @@ prefix = $$(case $(1) in \
 find = \
 	{ \
 		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /Library/Developer/CoreSimulator/Volumes -prune \) ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
-		cd $(XCODE)/Contents/Developer ; find * ! \( -path '*/Library/Developer/CoreSimulator' -prune \) $(1) | sed 's|^|macOS /Applications/Xcode.app/Contents/Developer/|' ; \
+		find $(XCODE)/Contents/Developer $(1) | sed 's|^$(XCODE)|macOS /Applications/Xcode.app|' ; \
 		test -d "$(call prefix,macOS-dyld)" && cd "$(call prefix,macOS-dyld)" && find . $(1) | sed '1d;s/^\./macOS-dyld /' ; \
 		cd "$(call prefix,iOS)" ; find . $(1) | sed '1d;s/^\./iOS /' ; \
 		cd "$(call prefix,tvOS)" ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
