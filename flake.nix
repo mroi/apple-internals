@@ -13,16 +13,12 @@
 			url = "github:keith/dyld-shared-cache-extractor";
 			flake = false;
 		};
-		snapshot-header = {
-			url = "https://github.com/apple/darwin-xnu/archive/refs/tags/xnu-6153.141.1.tar.gz";
-			flake = false;
-		};
 		snap-util = {
 			url = "github:ahl/apfs";
 			flake = false;
 		};
 	};
-	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snapshot-header, snap-util }: {
+	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snap-util }: {
 		packages.x86_64-darwin = let
 			xcode = (nixpkgs.legacyPackages.x86_64-darwin.xcodeenv.composeXcodeWrapper {
 				version = "15.0.1";
@@ -91,7 +87,13 @@
 				};
 			snap-util =
 				with import nixpkgs { system = "x86_64-darwin"; };
-				stdenv.mkDerivation {
+				let snapshot-header = fetchFromGitHub {
+					owner = "apple";
+					repo = "darwin-xnu";
+					rev = "xnu-6153.141.1";
+					hash = "sha256-/2aR6n5CbUobwbxkrGqBOAhCZLwDdIsoIOcpALhAUF8=";
+				};
+				in stdenv.mkDerivation {
 					name = "snap-util-${lib.substring 0 8 self.inputs.snap-util.lastModifiedDate}";
 					src = snap-util;
 					nativeBuildInputs = [ xcode ];

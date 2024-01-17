@@ -68,8 +68,7 @@
         "command-line": "command-line",
         "dsc-extractor": "dsc-extractor",
         "nixpkgs": "nixpkgs",
-        "snap-util": "snap-util",
-        "snapshot-header": "snapshot-header"
+        "snap-util": "snap-util"
       }
     },
     "snap-util": {
@@ -86,18 +85,6 @@
         "owner": "ahl",
         "repo": "apfs",
         "type": "github"
-      }
-    },
-    "snapshot-header": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-/2aR6n5CbUobwbxkrGqBOAhCZLwDdIsoIOcpALhAUF8=",
-        "type": "tarball",
-        "url": "https://github.com/apple/darwin-xnu/archive/refs/tags/xnu-6153.141.1.tar.gz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://github.com/apple/darwin-xnu/archive/refs/tags/xnu-6153.141.1.tar.gz"
       }
     }
   },
