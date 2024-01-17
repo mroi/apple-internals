@@ -23,9 +23,11 @@
 			xcode = (nixpkgs.legacyPackages.x86_64-darwin.xcodeenv.composeXcodeWrapper {
 				version = "15.0.1";
 			}).overrideAttrs (attrs: { __noChroot = true; });
+
 		in {
+
 			acextract =
-				with import nixpkgs { system = "x86_64-darwin"; };
+				with nixpkgs.legacyPackages.x86_64-darwin;
 				let xcodeHook = makeSetupHook {
 					name = "xcode-hook";
 					propagatedBuildInputs = [ xcode ];
@@ -34,6 +36,7 @@
 					name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
 					src = acextract;
 					nativeBuildInputs = [ xcodeHook ];
+					__noChroot = true;
 					preBuild = "LD=$CC";
 					# FIXME: want to have submodule support for Nix flakes, workaround by explicit instantiation
 					postUnpack = "rmdir source/CommandLine ; ln -s ${command-line} source/CommandLine";
@@ -76,17 +79,18 @@
 						cp Products/Release/acextract $out/bin/
 					'';
 					dontStrip = true;
-					__noChroot = true;
 				};
+
 			dsc-extractor =
-				with import nixpkgs { system = "x86_64-darwin"; };
+				with nixpkgs.legacyPackages.x86_64-darwin;
 				stdenv.mkDerivation {
 					name = "dsc-extractor-${lib.substring 0 8 self.inputs.dsc-extractor.lastModifiedDate}";
 					src = dsc-extractor;
 					nativeBuildInputs = [ cmake ];
 				};
+
 			snap-util =
-				with import nixpkgs { system = "x86_64-darwin"; };
+				with nixpkgs.legacyPackages.x86_64-darwin;
 				let snapshot-header = fetchFromGitHub {
 					owner = "apple";
 					repo = "darwin-xnu";
@@ -115,6 +119,7 @@
 						EOF
 						chmod a+x $out/bin/snapUtil
 					'';
+					__noChroot = true;
 					postFixup = ''
 						cat > snapUtil.entitlements <<- EOF
 							<?xml version="1.0" encoding="UTF-8"?>
@@ -130,7 +135,6 @@
 						EOF
 						codesign -s - --entitlement snapUtil.entitlements $out/bin/.snapUtil-wrapped
 					'';
-					__noChroot = true;
 				};
 		};
 	};
