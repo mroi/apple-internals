@@ -7,7 +7,7 @@ AAT	Apple Advanced Typography; font format and rendering engine
 Accounts	launchd service: com.apple.accountsd; /System/Library/Accounts
 ACDE	Apple Connect Device External? ACDEClient.framework, old two-step verification, derived from a company-internal AppleConnect system?
 ACFS	Apple Clustered File System; deprecated file system for Xsan; acfs.framework
-Acoustic ID	Siri feature to recognize songs
+Acoustic ID	song recognition and matching with Apple catalog, playback on HomePod; /System/Library/Components/AudioDSP.component
 Activation	cryptographic check-in with iCloud to lock devices reported by the user as lost; verified by iBoot; MobileActivationMacOS.framework; launchd service: com.apple.mobileactivationd; servers: humb.apple.com, albert.apple.com
 Activity	jobs, coarse-grained work units of applications; tracked by the system across XPC, bears a QoS class for scheduling; low-level mechanism not to be confused with User Activity
 AE	Apple Events; messaging system to invoke application functionality; CoreServices.framework/AE.framework; launchd services: com.apple.coreservices.appleevents, com.apple.AEServer (AE over network)
@@ -19,7 +19,7 @@ ALF	Application-Layer Firewall, launchd service: com.apple.alf (socketfilterfw)
 Alloy	substrate for communication between user devices over Bluetooth and devices to iCloud, implemented over IDS; /System/Library/IdentityServices/ServiceDefinitions; launchd service: com.apple.identityservicesd
 ALS	Ambient Light Sensor, AmbientDisplay.framework
 Amber	Swift UI; SwiftUI.framework
-AMFI	Apple Mobile File Integrity, checks code integrity based on code signature, stronger enforcement with hardened runtime, validates entitlement restrictions; launchd service: com.apple.MobileFileIntegrity (amfid, invoked by kernel through host special port 18); disabled by setting amfi_get_out_of_my_way=0x1 in boot-args
+AMFI	Apple Mobile File Integrity, checks code integrity based on code signature, stronger enforcement with hardened runtime, validates entitlement restrictions and environment constraints (launch constraints, library constraints); launchd service: com.apple.MobileFileIntegrity (amfid, invoked by kernel through host special port 18); disabled by setting amfi_get_out_of_my_way=0x1 in boot-args
 AMP	Apple Media Protocol? former parts of iTunes for iPod and iOS device access in Finder, Home Sharing; AMPDevices.framework, AMPSharing.framework; launchd services: com.apple.AMPDeviceDiscoveryAgent, com.apple.AMPDevicesAgent, com.apple.amp.mediasharingd
 AMP	Asynchronous Multiprocessing; performance and power-efficiency cores on Apple Silicon
 AMS	Apple Media Services; formerly the iTunes stores and media services: App Stores, Apple Music, Apple TV, iCloud media library, Apple Podcasts, Podcast sync, Books Store, Books sync; AppleMediaServices.framework; server: phobos.apple.com
@@ -54,7 +54,7 @@ AWDL	Apple Wireless Direct Link; secondary WiFi interface that runs in parallel 
 Background Assets	assets that an app extension loads without the app being launched; BackgroundAssets.framework; extension point: com.apple.background-asset-downloader-extension; launchd service: com.apple.backgroundassets.user
 Bezel	on-screen overlays for hardware volume buttons, screen brightness, Bluetooth HID, and others; /Library/Application Support/Apple/BezelServices, launchd services: com.apple.loginwindow, com.apple.OSDUIHelper
 Bifrost	emergency satellite connectivity; /System/Library/LocationBundles/Bifrost.bundle
-Biome	CloudKit-synced real-time event streaming and processing; widely used, primarily Avatars/People? Siri?; BiomeStreams.framework, BiomeSync.framework; launchd services: com.apple.BiomeAgent, com.apple.biomesyncd
+Biome	CloudKit-synced real-time streaming and processing for donated and invoked Intents; BiomeStreams.framework, BiomeSync.framework; local processing in Poirot database (?): PoirotSQLite.framework, PoirotUDFs.framework; launchd services: com.apple.BiomeAgent, com.apple.biomesyncd
 Blast Door	sandboxed sanitization process for untrusted  iMessage input; BlastDoor.framework
 BOM	Bill of Materials; format to store contents of installer Packages; command line tool: lsbom
 Bonjour	mDNS; launchd service: com.apple.mDNSResponder.reloaded; command line tool: dns-sd
@@ -68,6 +68,7 @@ Cache Delete	cleanup for various caches; /System/Library/CacheDelete; launchd se
 CAML	Core Animation Markup Language; XML file format for layers, shapes and animations
 Carousel	derivative of SpringBoard for Watch home screen, watch face, and notification center
 CDM	Continuous Dialog Manager; dialog with Siri; ContinuousDialogManagerService.framework, Marrs.framework; 
+CEC	Consumer Electronics Control; remote control for HDMI-connected devices; CoreRC.framework, IOCEC.framework
 Celestial	media streaming used by ReplayKit for game broadcasts; Celestial.framework
 Certificates	validity checked using CRLs, OCSP stapling, and transparency logs; /System/Library/Security/Certificates.bundle; launchd services: com.apple.trustd, com.apple.trustd.agent, com.apple.ocspd; command line tool: crlrefresh
 Chamois	Stage Manager
@@ -111,11 +112,11 @@ DMC	Disk Mount Conditioner; simulates slow IO devices; command line tool: dmc
 DND	Do Not Disturb
 DSID	Destination Signaling Identifier, unique ID for IDS login on a specific device
 DTrace	system-wide tracing infrastructure, command line tools: dtrace, *.d, dappprof, dapptrace, dtruss, errinfo, execsnoop, fddist, fs_usage, imptrace, iopattern, iopending, iosnoop, iotop, lastwords, latency, opensnoop, plockstat, rwsnoop, sampleproc, sc_usage, topsyscall, topsysproc
-Duet	telemetry collection engine for system and user events, forecasting by machine learning, backend for DAS, Proactive, Relevance, Screen Time, thermal and battery management; /System/Library/DuetKnowledgeBase; CoreDuet.framework, CoreKnowledge.framework, CorePrediction.framework; launchd services: com.apple.coreduetd, com.apple.knowledge-agent, com.apple.ospredictiond
+Duet	telemetry collection engine for system and user events, forecasting by machine learning, backend for DAS, Proactive, Relevance, Screen Time, thermal and battery management; /System/Library/DuetKnowledgeBase; CoreDuet.framework, CoreKnowledge.framework, CorePrediction.framework, CascadeEngine.framework (link to Biome); launchd services: com.apple.coreduetd, com.apple.knowledge-agent, com.apple.ospredictiond
 Dyld Shared Cache	dynamic linker cache, stores all system libraries in prelinked form, original library files are removed; /System/Volumes/Preboot/Cryptexes/OS/System/Library/dyld; command line tools: dyld_info, dyld_usage, update_dyld_shared_cache
 EAS	Exchange Active Sync; network protocol for accessing Microsoft Exchange servers
 EDR	Extended Dynamic Range; rendering with transfer function extending beyond sRGB white; implemented natively on XDR displays and by backlight modulation on others; HDRProcessing.framework
-Energy Impact	unitless metric for per-application energy consumption, machine-specific coefficients; /usr/share/pmenergy, /usr/share/kpep; launchd services: com.apple.sysmond, com.apple.thermald; command line tool: powermetrics
+Energy Impact	unitless metric for per-application energy consumption, machine-specific coefficients; /usr/share/pmenergy, launchd services: com.apple.sysmond, com.apple.thermald; command line tool: powermetrics
 Engram	Messages in iCloud; devices store received iMessages in CloudKit; Engram.framework
 Entitlements	capability-like attributes bound to executables by code signing; some entitlements like App Sandbox restrict ambient authority, some gradually relieve those restrictions (using Seatbelt), some services or system calls grant privilege based on caller entitlements
 ESS	IDS user directory, public key distribution for iMessage and CloudKit sharing, uses Transparency; server: *.ess.apple.com; launchd service: com.apple.identityservicesd
@@ -130,7 +131,7 @@ FiDES	Fi? Distributed Evaluation Service? aggregates Differential Privacy data f
 File Provider	infrastructure and extension system for syncing with cloud providers; placeholder files based on SF_DATALESS attribute in APFS; FileProvider.framework; locally stored in ~/Library/CloudStorage; command line tool: fileproviderctl
 Find My	location sharing by explicitly querying devices remotely or collateral beacon detection using Search Party; FMCore.framework, FMF.framework; launchd service: com.apple.icloud.fmfd (find my friends)
 Firmlink	bi-directional non-symbolic link between the read-only system volume and the data volume, additional symlinks and mountpoints in the root directory are virtually allocated; /usr/share/firmlinks, /etc/synthetic.conf
-Focus	restriction modes for notification presentation; focus filters for in-app display restrictions, communicat by Intents; Focus.framework, DoNotDisturb.framework; local settings in ~/Library/DoNotDisturb
+Focus	restriction modes for notification presentation; focus filters for in-app display restrictions, communicated by Intents; Focus.framework, DoNotDisturb.framework; local settings in ~/Library/DoNotDisturb
 FollowUp	user interaction for Secure Backup wrapping with device passcode, CoreFollowUp.framework; launchd service: com.apple.followupd
 FoundationDB	fundamental iCloud storage database, marketed as CloudKit, separated into containers; records, blobs, and large asset storage with MMCS, server-side continuous queries can trigger push notifications, user management by IDS, sharing between users by GroupKit; PCS keys used for hierarchical zone, record, and asset encryption; CloudKitDaemon.framework; launchd service: com.apple.cloudd; locally stored in ~/Library/Caches/CloudKit, ~/Library/Containers/*/Data/CloudKit; command line tool: cktool
 FPR	Fast Permission Restrictions; Apple CPU registers to downgrade (old APRRs do bitmasking) or remap (SPRRs since M1) actual permissions of memory pages (the CTRR region) per thread; used for JIT protection and by AMFI to freeze user code after checking
@@ -163,7 +164,7 @@ IM	Instant Messaging; usually means iMessage and FaceTime
 IMG4	boot files (Mach-O binaries or configuration data) with ASN.1 signature, contains RemotePolicy certificate constraints to restrict Boot Policy evaluation
 Intent	use-case-driven interaction with 3rd-party apps from a host app; used for Siri, Maps, Shortcuts, Widgets (configuration); definition file or programmatically using AppIntents.framework; command line tool: appintentsmetadataprocessor (Xcode extracts Intent definition at compile time); extension points: com.apple.intents-service, com.apple.intents-ui-service
 IOKit	device driver subsystem for in-kernel and DriverKit drivers, command line tool: ioreg
-Ironwood	dictation, customized on server with selected user data (contacts, app names, music titles, HomeKit names, Siri Shortcut phrases), not tied to Apple ID; SpeechRecognitionCore.framework; server: guzzoni.apple.com
+Ironwood	dictation, customized on server with selected user data (contacts, app names, music titles, HomeKit names, Siri Shortcut phrases), not tied to Apple ID; SpeechRecognitionCore.framework, ASRBridge.framework; server: guzzoni.apple.com
 ISP	Image Signal Processor; camera imaging circuit in iPhones
 ITML	iTunes Markup Language; metdata tagging for media services; ITMLKit.framework
 ITP	Intelligent Tracking Prevention, cross-site tracking defenses in Safari, statistics and user interaction classify sites, cookies are partitioned and access is restricted
@@ -209,7 +210,7 @@ Mondrian	photo collage arrangement in Photos.app; Mondrian.framework
 MRT	Malware Removal Tool; /Library/Apple/System/Library/CoreServices/MRT.app; superseded by XProtect
 Multipeer Connectivity	ad-hoc networking; Bonjour for discovery; WiFi, AWDL, Bluetooth, or Ethernet as transport; optional encryption and certificate-based authentication; MultipeerConnectivity.framework
 Nano	prefix for watchOS
-Nearby Interaction	proximity-based interaction between devices; proximity measured using ultra wideband or derived from other technologies; used for Universal Control; NearbyInteraction.framework, Proximity.framework; launchd service: com.apple.nearbyd
+Nearby Interaction	proximity-based interaction between devices; proximity measured using ultra wideband or derived from other technologies; used for Universal Control, tapping phones for AirDrop; NearbyInteraction.framework, Proximity.framework; launchd service: com.apple.nearbyd
 Newton	fall detection on watchOS
 NLP	Natural Language Processing; NLP.framework; related to mecabra libraries, a linguistic engine for Chinese and Japanese; /usr/share/mecabra, /usr/share/tokenizer
 Notarization	app security scan by Apple; cryptographic proof stapled to code signature, tested at launch by System Policy; for non-notarized apps sends code hash to Apple; command line tools: notarytool, altool, stapler
@@ -244,6 +245,7 @@ Persona	separation of sub-user-identities, like when using a private and managed
 PHASE	Physical Audio Spatialization Engine; 3D sound rendering engine; Apple devices map audio sources (even mono and stereo) to virtual speakers in a 3D sound stage, which is simulated by the physical speakers via a head-related transfer function; PHASE.framework
 Piano Mover	Mail Drop; bulk mail attachments transfered over PCS; not to be confused with storage for iMessage attachments, which uses a CloudKit container
 Plugin	Extensions, XPC services bundled with apps or frameworks, discovery by Launch Services; launchd service: com.apple.pluginkit.pkd; command line tool: pluginkit
+PMC	Performance Monitoring Counters; Recount.framework; /usr/share/kpep
 PMP	Port Mapping Protocol; Apple alternative to UPnP, Bonjour service: _acp-sync._tcp
 Poster	iPhone lock screen; PosterBoard.framework, PosterKit.framework; /Library/Wallpaper
 PowerUI	battery management like smart charge and power save, learns from Duet and other data; PowerUI.framework; /var/db/PowerUI; launchd service: com.apple.PowerUIAgent
@@ -304,7 +306,7 @@ SPRR	Shadow Permission Remap Register? feature of Apple Silicon to dynamically r
 SRP	Secure Remote Password; standard cryptographic protocol for proving knowledge of a secret such that attackers cannot brute-force the secret; AppleSRP.framework
 SSO	Single Sign-On
 SSV	Signed System Volume, als called Authenticated Root Volume (ARV); macOS boots from blessed read-only APFS snapshot, merkle-tree and root-hash stored in Preboot volume; modifications require disabling root authentication with csrutil from recovery, then the live filesystem can be mounted, modified, and re-blessed; command line tools: apfs_systemsnapshot, bless, csrutil
-Stark	CarPlay
+Stark	CarPlay; companion apps on iOS: /Applications/AutoSettings.app, /Applications/CarCamera.app, /Applications/Charge.app, /Applications/Climate.app, /Applications/Closures.app, /Applications/Media.app, /Applications/TirePressure.app, /Applications/Trip.app
 Stockholm	Secure Element in Apple SoCs, a processor running crypto protocols on keys it protects; used for Apple Pay and Car Key; related codenames: Icefall, Warsaw
 Storage Management	freeing up disk space by managing bulky items; UI in System Information.app; StorageManagement.framework; launchd service: com.apple.diskspaced; extension point: com.apple.storagemanagement; extends Cache Delete service
 Suggestions	semantic analysis of mails and websites to suggest contacts, calendar events and the like; launchd services: com.apple.suggestd, com.apple.reversetemplated; custom JavaScript parsers in /System/Library/AssetsV2/com_apple_MobileAsset_CoreSuggestions
@@ -335,6 +337,7 @@ User Activity	abstraction for deep-linking into apps with structured context (pe
 User Notifications	user interface for notification center; launchd service: com.apple.usernoted
 UTI	Uniform Type Identifiers; system for document types; file extensions and MIME types are mapped to UTIs, UTIs form a conformance graph, apps register their UTIs with Launch Services; /System/Library/CoreServices/CoreTypes.bundle; also Apple’s hardware devices are represented as UTIs
 VA	Video Acceleration; AppleGVA.framework, AppleVA.framework, AppleVPA.framework
+VDAF	Verifiable Distributed Aggregation Function; part of Differential Privacy; VDAF.framework
 Viceroy	video conferencing used by FaceTime and ReplayKit; ViceroyTrace.framework
 Virtualisation	running virtual machines on macOS; Hypervisor.framework (for basic VMs and vCPUs), Virtualization.framework (brings a robust set of device models)
 VSDB	volume status database; /var/db/volinfo.database; command line tool: vsdbutil
