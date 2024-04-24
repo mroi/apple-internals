@@ -342,6 +342,7 @@ Viceroy	video conferencing used by FaceTime and ReplayKit; ViceroyTrace.framewor
 Virtualisation	running virtual machines on macOS; Hypervisor.framework (for basic VMs and vCPUs), Virtualization.framework (brings a robust set of device models)
 VSDB	volume status database; /var/db/volinfo.database; command line tool: vsdbutil
 Waldo	selects edge servers based on approximate location, part of Private Relay, seen in NSP
+Watchdog  Restarts the computer if macOS is likely to panic; launchd service: com.apple.watchdogd
 WFS	WebDAV File Sharing; built-in file sharing with Apache; /etc/wfs; command line tool: wfsctl
 Widgets	content excerpt from apps; provided via a timeline of view hierarchies, configuration uses Intents; visible on home screen, lock screen, as live activities, as watch complications; WidgetKit.framework; extension point: com.apple.widgetkit-extension; launchd service: com.apple.chronod (timeline management and sync)
 Willow	HomeKit; end-to-end-encrypted communication protocol and API for IoT-accessories; pairing with SRP using code printed on device, credential sync by CKKS, transported over Alloy, remote access using Apple TV as proxy; launchd service: com.apple.homed
