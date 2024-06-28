@@ -84,9 +84,9 @@ find = \
 		$(2) find /Library /System /bin /dev /private /sbin /usr ! \( -path /Library/Developer/CoreSimulator/Volumes -prune \) ! \( -path /System/Volumes/Data -prune \) $(1) 2> /dev/null | sed 's/^/macOS /' ; \
 		find $(XCODE)/Contents/Developer $(1) | sed 's|^$(XCODE)|macOS /Applications/Xcode.app|' ; \
 		test -d "$(call prefix,macOS-dyld)" && cd "$(call prefix,macOS-dyld)" && find . $(1) | sed '1d;s/^\./macOS-dyld /' ; \
-		cd "$(call prefix,iOS)" ; find . $(1) | sed '1d;s/^\./iOS /' ; \
-		cd "$(call prefix,tvOS)" ; find . $(1) | sed '1d;s/^\./tvOS /' ; \
-		cd "$(call prefix,watchOS)" ; find . $(1) | sed '1d;s/^\./watchOS /' ; \
+		cd "$(call prefix,iOS)" ; $(2) find . $(1) 2> /dev/null | sed '1d;s/^\./iOS /' ; \
+		cd "$(call prefix,tvOS)" ; $(2) find . $(1) 2> /dev/null | sed '1d;s/^\./tvOS /' ; \
+		cd "$(call prefix,watchOS)" ; $(2) find . $(1) 2> /dev/null | sed '1d;s/^\./watchOS /' ; \
 	}
 
 file = SELECT id, $(1) FROM files WHERE os = '$$os' AND path = '$$(echo "$$path" | sed "s/'/''/g")'
