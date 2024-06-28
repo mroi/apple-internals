@@ -21,8 +21,11 @@
 	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snap-util }: {
 		packages.x86_64-darwin = let
 			xcode = (nixpkgs.legacyPackages.x86_64-darwin.xcodeenv.composeXcodeWrapper {
-				version = "15.2";
-			}).overrideAttrs (attrs: { __noChroot = true; });
+				version = "16.0";
+			}).overrideAttrs (attrs: { buildCommand = ''
+				# see https://github.com/NixOS/nixpkgs/pull/322641
+				set +o pipefail
+			'' + attrs.buildCommand; });
 
 		in {
 
