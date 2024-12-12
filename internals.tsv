@@ -5,6 +5,7 @@ AA	Apple Archive, see also Apple Encrypted Archive; command line tools: aa, aea,
 AAC	Automatic Assessment Configuration; AutomaticAssessmentConfiguration.framework; puts device in a locked mode for exam-style test applications
 AAT	Apple Advanced Typography; font format and rendering engine
 Accounts	launchd service: com.apple.accountsd; /System/Library/Accounts
+ACDC	Apple Chips in Data Centers; see PCC
 ACDE	Apple Connect Device External? ACDEClient.framework, old two-step verification, derived from a company-internal AppleConnect system?
 ACFS	Apple Clustered File System; deprecated file system for Xsan; acfs.framework
 Acoustic ID	song recognition and matching with Apple catalog, playback on HomePod; /System/Library/Components/AudioDSP.component
@@ -12,7 +13,7 @@ Activation	cryptographic check-in with iCloud to lock devices reported by the us
 Activity	jobs, coarse-grained work units of applications; tracked by the system across XPC, bears a QoS class for scheduling; low-level mechanism not to be confused with User Activity
 AE	Apple Events; messaging system to invoke application functionality; CoreServices.framework/AE.framework; launchd services: com.apple.coreservices.appleevents, com.apple.AEServer (AE over network)
 Aegir	astronomy watch face and lock screen; /System/Library/CoreServices/AegirProxyApp.app
-AFM	Apple Foundation Model; pre-trained transformer and diffusion models for Greymatter, optimized for on-device use by quantization (with accuracy-recovery adapters) and palletization
+AFM	Apple Foundation Model; pre-trained transformer and diffusion models for Greymatter, optimized for on-device use by quantization (with accuracy-recovery adapters) and palletization; command line tool: modelcatalogdump
 AGC	Apple Graphics Control, management of multiple displays and display port connections; launchd service: com.apple.displaypolicyd
 AHAP	Apple Haptic Audio Pattern; file format for simultaneous audio and haptic data; CoreHaptics.framework
 AIR	Apple Intermediate Representation; synthetic bytecode architecture target for GPU binary toolchain
@@ -69,6 +70,7 @@ Cache Delete	cleanup for various caches; /System/Library/CacheDelete; launchd se
 CAML	Core Animation Markup Language; XML file format for layers, shapes and animations
 Carousel	derivative of SpringBoard for Watch home screen, watch face, and notification center
 CBOR	Concise Binary Object Representation; JSON-inspired compact binary data serialization; CBORLibrary.framework
+CDHash	Code Directory Hash; a hash of hashes over the parts of a code bundle; command line tool: codesign
 CDM	Continuous Dialog Manager; natural dialog with Siri, MARRS for multi-modality; ContinuousDialogManagerService.framework
 CEC	Consumer Electronics Control; remote control for HDMI-connected devices; CoreRC.framework, IOCEC.framework
 Celestial	media streaming used by ReplayKit for in-app screen broadcasts; Celestial.framework; launchd service: com.apple.replayd
@@ -145,9 +147,9 @@ FUD	Firmware Update Daemon; see TSS, UARP; launchd service: com.apple.accessoryu
 Game Mode	auto-activates when games are shown full screen, throttles background work, lowers audio and input latency; launchd service: com.apple.gamepolicyd
 GID	group ID key, shared across all devices of the same SoC generation, derived keys are used to prove device type over the network, only accessible by SEP
 Gizmo	Apple Watch; watch settings managed by Companion iPhone; /Applications/Bridge.app, /System/Library/BridgeManifests
-Greymatter	Apple Intelligence; on-device language and diffusion models, larger server-based models in PCC; AFM refined for specific tasks (queries, summarization, categorization) by adapters (parameter for inserted network modules); grounded with context from Biome and intelligence stores; ~/Library/IntelligencePlatform; launchd service: com.apple.modelmanagerd (model residency management); /System/Library/ModelManager/Policy.plist; command line tool: csfdiagnose (cloud subscription features)
+Greymatter	Apple Intelligence; on-device language and diffusion models, larger server-based models in PCC; AFM refined for specific tasks (queries, summarization, categorization) by adapters (parameter for inserted network modules); grounded with context from Biome and intelligence stores; ~/Library/IntelligencePlatform; launchd service: com.apple.modelmanagerd (model residency management); /System/Library/ModelManager/Policy.plist; /Applications/Tamale.app (Camera Control integration); command line tool: csfdiagnose (cloud subscription features), modelmanagerdump
 Group Activities	SharePlay; sharing of media content and programmatic state over FaceTime calls; GroupActivities.framework, CopresenceCore.framework; launchd service: com.apple.telephonyutilities.callservicesd
-GroupKit	groups of IDS users with shared CloudKit (PCS) access; GroupKit.framework; launchd service: com.apple.groupkitd
+GroupKit	groups of IDS users with shared CloudKit (PCS) access; GroupKit.framework
 GSS	Generic Security Service; part of Kerberos; GSS.framework; launchd service: com.apple.gssd (invoked by kernel through host special port 19); command line tool: gsstool
 GXF	Guarded Execution Feature/Fault, additional exception levels on Apple Silicon, lateral to the usual exception levels; page tables remain the same, but interpretation of permission bits changes by way of FPR, genter and gexit instructions; implements lightweight intra-address-space protection contexts
 HAP	Home Automation Protocol; CoreHAP.framework
