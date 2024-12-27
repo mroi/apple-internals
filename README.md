@@ -10,7 +10,7 @@ tools:
 [**acextract**](https://github.com/bartoszj/acextract)  
 Unpacks asset catalogs to individual files.
 
-[**dyld-shared-cache-util**](https://github.com/antons/dyld-shared-cache-big-sur)  
+[**dyld-shared-cache-extractor**](https://github.com/keith/dyld-shared-cache-extractor)  
 Extracts dynamic libraries from the dyld linker cache.
 
 [**snapUtil**](https://github.com/ahl/apfs)  
