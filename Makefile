@@ -1,6 +1,6 @@
 override DB := $(if $(DB),$(DB:.lz=),$(lastword $(sort internals-$(shell sw_vers -productVersion).db $(basename $(wildcard internals-*)))))
 MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Apple\ Internals.rtf
-DB_TARGETS = db_files db_binaries db_manifests db_assets db_services
+DB_TARGETS = db_files db_restricted db_binaries db_manifests db_assets db_services
 CHECK_TARGETS = check_files check_binaries check_manifests check_services
 
 .PHONY: all check view sqlite $(DB_TARGETS) $(CHECK_TARGETS)
@@ -33,7 +33,8 @@ check: internals.tsv
 	@$(MAKE) --silent --jobs=1 $(CHECK_TARGETS)
 
 define VIEW
-SELECT path,os FROM files;
+SELECT path,os FROM files WHERE restricted IS NULL;
+SELECT path,os,'restricted' FROM files WHERE restricted;
 SELECT path,os,name FROM files NATURAL JOIN assets;
 SELECT path,os,dylib FROM files NATURAL JOIN linkages;
 SELECT files.path,os,key,value FROM files NATURAL JOIN services, json_each(plist);
@@ -109,10 +110,16 @@ $(DB_TARGETS)::
 db_files:: dyld
 	printf '\033[1mcollecting file information...\033[m\n' >&2
 	echo 'DROP TABLE IF EXISTS files;'
-	echo 'CREATE TABLE files (id INTEGER PRIMARY KEY, os TEXT, path TEXT, executable BOOLEAN);'
+	echo 'CREATE TABLE files (id INTEGER PRIMARY KEY, os TEXT, path TEXT, restricted BOOLEAN, executable BOOLEAN);'
 	$(call find,,sudo) | sed -E "s/'/''/g;s/([^ ]*) (.*)/INSERT INTO files (os, path) VALUES('\1', '\2');/"
 	find $(HOME)/Library | sed "s|^$(HOME)|~|;s/'/''/g;s/.*/INSERT INTO files (os, path) VALUES('macOS', '&');/"
 	echo 'CREATE INDEX _files_path ON files (path);'
+
+db_restricted:: dyld
+	printf '\033[1mcollecting restricted files...\033[m\n' >&2
+	$(call find,-flags restricted,sudo) | while read -r os path ; do \
+		echo "UPDATE files SET restricted = true WHERE os = '$$os' AND path = '$$(echo "$$path" | sed "s/'/''/g")' ;" ; \
+	done
 
 db_binaries:: dyld
 	printf '\033[1mcollecting executable information...\033[m\n' >&2
