@@ -21,7 +21,6 @@
 	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snap-util }: {
 		packages.x86_64-darwin = let
 			xcode = nixpkgs.legacyPackages.x86_64-darwin.xcodeenv.composeXcodeWrapper {};
-
 		in {
 
 			acextract =
