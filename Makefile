@@ -56,16 +56,24 @@ DSCEXTRACTOR = $(shell nix build --no-write-lock-file --no-warn-dirty .\#dsc-ext
 	readlink result && rm result)/bin/dyld-shared-cache-extractor
 
 $(DB_TARGETS)::
-	# evaluate helper tools to catch Nix build errors early
-	: $(ACEXTRACT)
-	: $(DSCEXTRACTOR)
-
-dyld: /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64h /System/Cryptexes/OS/System/DriverKit/System/Library/dyld/dyld_shared_cache_x86_64h
+	# check presence of helper tools and other preconditions
+	if ! test -x $(ACEXTRACT) ; then \
+		printf '\033[1macextract tool unavailable\033[m\n' >&2 ; \
+		echo 'FAIL;' ; \
+		exit 1 ; \
+	fi
 	if ! test -x $(DSCEXTRACTOR) ; then \
 		printf '\033[1mdscextractor tool unavailable\033[m\n' >&2 ; \
 		echo 'FAIL;' ; \
 		exit 1 ; \
 	fi
+	if ! csrutil status | grep -Fq disabled ; then \
+		printf '\033[1mdisable SIP to get complete file information\033[m\n' >&2 ; \
+		echo 'FAIL;' ; \
+		exit 1 ; \
+	fi
+
+dyld: /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64h /System/Cryptexes/OS/System/DriverKit/System/Library/dyld/dyld_shared_cache_x86_64h
 	for i in $+ ; do $(DSCEXTRACTOR) $$i $@ ; done > /dev/null
 	find $@ -type f -print0 | xargs -0 chmod a+x
 
@@ -74,9 +82,9 @@ XCODE = $(lastword $(wildcard /Applications/Xcode.app /Applications/Xcode-beta.a
 prefix = $$(case $(1) in \
 	(macOS) ;; \
 	(macOS-dyld) echo $(dir $(realpath $(firstword $(MAKEFILE_LIST))))/dyld ;; \
-	(iOS) echo $(lastword $(wildcard /Library/Developer/CoreSimulator/Volumes/iOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS*.simruntime/Contents/Resources/RuntimeRoot)) ;; \
-	(tvOS) echo $(lastword $(wildcard /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS*.simruntime/Contents/Resources/RuntimeRoot)) ;; \
-	(watchOS) echo $(lastword $(wildcard /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS*.simruntime/Contents/Resources/RuntimeRoot)) ;; \
+	(iOS) echo $(lastword $(wildcard /Library/Developer/CoreSimulator/Volumes/iOS_*))/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS*.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(tvOS) echo $(lastword $(wildcard /Library/Developer/CoreSimulator/Volumes/tvOS_*))/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS*.simruntime/Contents/Resources/RuntimeRoot ;; \
+	(watchOS) echo $(lastword $(wildcard /Library/Developer/CoreSimulator/Volumes/watchOS_*))/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS*.simruntime/Contents/Resources/RuntimeRoot ;; \
 	esac)
 
 find = \
@@ -99,11 +107,6 @@ $(DB_TARGETS)::
 	echo 'BEGIN IMMEDIATE TRANSACTION;'
 
 db_files:: dyld
-	if ! csrutil status | grep -Fq disabled ; then \
-		printf '\033[1mdisable SIP to get complete file information\033[m\n' >&2 ; \
-		echo 'FAIL;' ; \
-		exit 1 ; \
-	fi
 	printf '\033[1mcollecting file information...\033[m\n' >&2
 	echo 'DROP TABLE IF EXISTS files;'
 	echo 'CREATE TABLE files (id INTEGER PRIMARY KEY, os TEXT, path TEXT, executable BOOLEAN);'
@@ -120,7 +123,7 @@ db_binaries:: dyld
 	echo 'CREATE TABLE entitlements (id INTEGER REFERENCES files, plist JSON);'
 	echo 'CREATE TABLE strings (id INTEGER REFERENCES files, string TEXT);'
 	$(call find,-follow -type f -perm +111) | while read -r os path ; do \
-		echo "UPDATE files SET executable = true WHERE os = '$$os' AND path = '$$path';" ; \
+		echo "UPDATE files SET executable = true WHERE os = '$$os' AND path = '$$(echo "$$path" | sed "s/'/''/g")';" ; \
 		if test -r "$(call prefix,$$os)$$path" && file --no-dereference --brief --mime-type "$(call prefix,$$os)$$path" | grep -Fq application/x-mach-binary ; then \
 			objdump --macho --dylibs-used "$(call prefix,$$os)$$path" | \
 				sed "1d;s/^.//;s/ ([^)]*)$$//;s/'/''/g;s|.*|INSERT INTO linkages $(call file,'&');|" ; \
@@ -153,11 +156,6 @@ db_manifests::
 	done
 
 db_assets::
-	if ! test -x $(ACEXTRACT) ; then \
-		printf '\033[1macextract tool unavailable\033[m\n' >&2 ; \
-		echo 'FAIL;' ; \
-		exit 1 ; \
-	fi
 	printf '\033[1mcollecting asset catalog information...\033[m\n' >&2
 	echo 'DROP TABLE IF EXISTS assets;'
 	echo 'CREATE TABLE assets (id INTEGER REFERENCES files, name TEXT);'
