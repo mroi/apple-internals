@@ -79,6 +79,7 @@ Chamois	Stage Manager
 CHIP	Connected Home over IP; Matter; integrated into HomeKit, can use Thread as transport layer; HomeKitMatter.framework, CoreThread.framework; launchd services: com.apple.threadradiod, com.apple.ThreadCommissionerService
 Circle	cryptographic primitive to exchange public keys of trusted devices of a user, signed by Circle peers; iCloud identity added as additional Circle peer, private key synced across all trusted devices, new devices can pull this key from Secure Backup to join the Circle; per-device Circles stored in CKKS for two-factor accounts (Octagon); KeychainCircle.framework; command line tools: otctl (Octagon)
 CKKS	CloudKit Key Sync, end-to-end secure syncing for credentials, seeded by Circle; currently includes ApplePay, AutoUnlock, CreditCards, DevicePairing, Engram, Health, Home, Manatee, SOS, WiFi and other keys; launchd service: com.apple.secd; command line tool: ckksctl
+CL4	Apple’s variant of the L4 microkernel, derived from Pistachio and Wombat/Darbat
 Clarity	customizable accessibility mode for simplified UI; ClarityFoundation.framework
 Classroom	school teachers can create assignments for student iPads and track progress in Schoolwork app; ClassKit.framework; launchd service: com.apple.studentd
 Cloud Pairing	part of Alloy, Bluetooth out-of-band pairing over iCloud for Continuity; launchd service: com.apple.BTServer.cloudpairing (cloudpaird)
@@ -134,14 +135,14 @@ Family Circle	Family Sharing; launchd services: com.apple.familycircled, com.app
 FDE	Full Disk Encryption, FileVault; command line tool: fdesetup, sysadminctl
 FDR	Factory Data/Device Reset? ensures that no downgrades are performed? servers: skl.apple.com, gg.apple.com; /System/Library/FDR
 Feldspar	Apple News; Silex.framework
-FiDES	Fi? Distributed Evaluation Service? aggregates Differential Privacy data for unlinkability? used for emoji, Suggestions, Dictation; /System/Library/DistributedEvaluation; DistributedEvaluation.framework, FedStats.framework (private federated learning?); server: fides-pol.apple.com
+FiDES	Fi? Distributed Evaluation Service? aggregates Differential Privacy data for unlinkability? used for emoji, Suggestions, Dictation; /System/Library/DistributedEvaluation; DistributedEvaluation.framework, FedStats.framework (private federated learning?)
 File Provider	infrastructure and extension system for syncing with cloud providers; placeholder files based on SF_DATALESS attribute in APFS; FileProvider.framework; locally stored in ~/Library/CloudStorage; command line tool: fileproviderctl
 Find My	location sharing by explicitly querying devices remotely or collateral beacon detection using Search Party; FMCore.framework, FMF.framework; launchd service: com.apple.icloud.fmfd (find my friends)
 Firmlink	bi-directional non-symbolic link between the read-only system volume and the data volume, additional symlinks and mountpoints in the root directory are virtually allocated; /usr/share/firmlinks, /etc/synthetic.conf
 Focus	restriction modes for notification presentation; focus filters for in-app display restrictions, communicated by Intents; Focus.framework, DoNotDisturb.framework; local settings in ~/Library/DoNotDisturb
 FollowUp	user interaction for Secure Backup wrapping with device passcode, CoreFollowUp.framework; launchd service: com.apple.followupd
 FoundationDB	fundamental iCloud storage database, marketed as CloudKit, separated into containers; records, blobs, and large asset storage with MMCS, server-side continuous queries can trigger push notifications, user management by IDS, sharing between users by GroupKit; PCS keys used for hierarchical zone, record, and asset encryption; CloudKitDaemon.framework; launchd service: com.apple.cloudd; locally stored in ~/Library/Caches/CloudKit, ~/Library/Containers/*/Data/CloudKit; command line tool: cktool
-FPR	Fast Permission Restrictions; Apple CPU registers to downgrade (old APRRs do bitmasking) or remap (SPRRs since M1) actual permissions of memory pages (the CTRR region) per thread; used for JIT protection and by AMFI to freeze user code after checking
+FPR	Fast Permission Restrictions; Apple CPU registers to downgrade (old APRRs do bitmasking) or remap (SPRRs since M1) actual permissions of memory pages (the CTRR region) per thread
 FSKit	user space file system support; kernel stub file system is /System/Library/Extensions/lifs.kext; file systems are in /System/Library/ExtensionKit/Extensions/com.apple.fskit.*; launchd service: com.apple.filesystems.fskitd, com.apple.filesystems.doubleagentd (handling of Apple double files in user space); extension point: com.apple.fskit.fsmodule
 FUD	Firmware Update Daemon; see TSS, UARP; launchd service: com.apple.accessoryupdaterd
 Game Mode	auto-activates when games are shown full screen, throttles background work, lowers audio and input latency; launchd service: com.apple.gamepolicyd
@@ -149,7 +150,7 @@ GID	group ID key, shared across all devices of the same SoC generation, derived 
 Gizmo	Apple Watch; watch settings managed by Companion iPhone; /Applications/Bridge.app, /System/Library/BridgeManifests
 Greymatter	Apple Intelligence; on-device language and diffusion models, larger server-based models in PCC; AFM refined for specific tasks (queries, summarization, categorization) by adapters (parameter for inserted network modules); grounded with context from Biome and intelligence stores; ~/Library/IntelligencePlatform; launchd service: com.apple.modelmanagerd (model residency management); /System/Library/ModelManager/Policy.plist; /Applications/Tamale.app (Camera Control integration); command line tool: csfdiagnose (cloud subscription features), modelmanagerdump
 Group Activities	SharePlay; sharing of media content and programmatic state over FaceTime calls; GroupActivities.framework, CopresenceCore.framework; launchd service: com.apple.telephonyutilities.callservicesd
-GroupKit	groups of IDS users with shared CloudKit (PCS) access; GroupKit.framework
+GroupKit	groups of IDS users with shared CloudKit (PCS) access; GroupKitCrypto.framework
 GSS	Generic Security Service; part of Kerberos; GSS.framework; launchd service: com.apple.gssd (invoked by kernel through host special port 19); command line tool: gsstool
 GXF	Guarded Execution Feature/Fault, additional exception levels on Apple Silicon, lateral to the usual exception levels; page tables remain the same, but interpretation of permission bits changes by way of FPR, genter and gexit instructions; implements lightweight intra-address-space protection contexts
 HAP	Home Automation Protocol; CoreHAP.framework
@@ -284,7 +285,7 @@ Replicator	notification sync from Companion iPhone, also drives remotely display
 Revisions	document autosave and auto-versioning; stored in .DocumentRevisions-V100; GenerationalStorage.framework; launchd service: com.apple.revisiond
 Routine	frequently visited locations on iOS, interacts with Duet; launchd service: com.apple.routined
 RTC	Real-time Telemetry and Crash reporting; RTCReporting.framework; launchd service: com.apple.rtcreportingd
-RTKit	operating system used on Apple Silicon for firmware of co-processors
+RTKit	real-time runtime used for firmware of Apple Silicon co-processors; on top of CL4 in Apple’s cellular modem
 RunningBoard	runtime management of apps, paradigm: app as service process invoked by system, check-in by frameworks, handles process assertions (frontmost app, see App Nap), memory pressure (see Jetsam) and compute resources (GPU), replacement for TAL?; launchd service: com.apple.runningboardd; /System/Library/LifecyclePolicy, /System/Library/RunningBoard
 Safety Monitor	Check In; short-term location sharing in iMessage until a destination is reached; /Applications/SafetyMonitorApp.app
 SBPL	Sandbox Profile Language; a TinyScheme-based embedded DSL for Seatbelt profiles
@@ -295,7 +296,7 @@ SDB	SQL Database; CoreSDB.framework, used by iCloud communication
 Search Party	portion of Find My service for offline devices; devices emit public part of rotating key pair via Bluetooth LE, other devices encrypt current location with this key and send to Apple, private key shared over CloudKit
 Seatbelt	process sandbox by filtering system calls; profiles written in SBPL; /System/Library/Sandbox/Profiles, /usr/share/sandbox; default file access policy asks for TCC confirmation before access to folders with user data (like Documents) is allowed; command line tool: sandbox-exec; launchd service: com.apple.sandboxd (invoked by kernel through host special port 14 for logging)
 Secure Backup	escrow part of CKKS; escrow key individually wrapped with passcodes of trusted devices, stored in HSM to prevent brute forcing, uses SRP so passcodes are not visible to iCloud, limited number of recovery attempts; protocol called Lakitu, uses FollowUp; launchd service: com.apple.SecureBackupDaemon (com.apple.sbd); CloudServices.framework
-SEP	Secure Enclave Processor; dedicated ARM core for security services, runs L4/Darbat-based sepOS, inline encryption to DRAM, manages AES keys in storage DMA engine, factory-paired channels to Touch ID/Face ID hardware, Secure Element, Neural Engine; SEP can use but not read UID and GID keys; credential verification performed by hardware lockbox with retry count enforcement
+SEP	Secure Enclave Processor; dedicated ARM core for security services, runs CL4-based sepOS, inline encryption to DRAM, manages AES keys in storage DMA engine, factory-paired channels to Touch ID/Face ID hardware, Secure Element, Neural Engine; SEP can use but not read UID and GID keys; credential verification performed by hardware lockbox with retry count enforcement
 Sequoia	translation; downloadable language models can run on-device; /Applications/SequoiaTranslator.app, Translation.framework
 Seymour	Apple Fitness+; workout videos integrated with Watch sensors; SeymourCore.framework, Blackbeard.framework (personalisation and workout programs)
 SF Symbols	scalable UI symbols; rendered with various color treatments; SFSymbols.framework
@@ -321,11 +322,11 @@ SOS	Secure Object Sync; syncing backend for iCloud Keychain, not to be confused 
 SPI	System Private Interface; /System/Library/PrivateFrameworks
 SpringBoard	iOS home screen; like Dock (Launchpad, Mission Control, desktop picture), Control Center, SystemUIServer (menu extras icons), loginwindow (lock screen), and WindowServer (compositor) on macOS; /System/Library/CoreServices/SpringBoard.app, /Applications/PreBoard.app, BaseBoard.framework, FrontBoard.framework, SplashBoard.framework; launchd service: com.apple.backboardd (compositor)
 SPRR	Shadow Permission Remap Register? feature of Apple Silicon to dynamically reintepret page permissions
-SPTM	Secure Page Table Monitor; code with higher-than-kernel privileges (Trustzone Monitor?) protects page table modifications; deprivileged Trusted Execution Monitor (TXM) implements policy; successor to FPR/SPRR?
+SPTM	Secure Page Table Monitor; code in kernel-level GXF protects page table modifications; Trusted Execution Monitor (TXM) in user-level GXF implements policy and parts of AMFI
 SRP	Secure Remote Password; standard cryptographic protocol for proving knowledge of a secret such that attackers cannot brute-force the secret; AppleSRP.framework
 SSO	Single Sign-On
 SSV	Signed System Volume, als called Authenticated Root Volume (ARV); macOS boots from blessed read-only APFS snapshot, merkle-tree and root-hash stored in Preboot volume; modifications require disabling root authentication with csrutil from recovery, then the live filesystem can be mounted, modified, and re-blessed; command line tools: apfs_systemsnapshot, bless, csrutil
-Stark	CarPlay; iPhone provides video feeds for in-car displays; three layers composited by the car: remote UI (from iPhone), punch-through UI (back up camera), local UI (dashboard gauges: assets from iPhone, rendered by car, like Live Activities?), overlay UI (essential indicators); associate apps on iOS: /Applications/AutoSettings.app, /Applications/CarCamera.app, /Applications/Charge.app, /Applications/Climate.app, /Applications/Closures.app, /Applications/Media.app, /Applications/TirePressure.app, /Applications/Trip.app
+Stark	CarPlay; iPhone provides video feeds for in-car displays; three layers composited by the car: remote UI (from iPhone), punch-through UI (back up camera), local UI (dashboard gauges: assets from iPhone, rendered by car, like Live Activities?), overlay UI (essential indicators); associate apps on iOS: /Applications/CarCamera.app, /Applications/Charge.app, /Applications/Climate.app, /Applications/Closures.app, /Applications/Media.app, /Applications/TirePressure.app, /Applications/Trip.app, /Applications/Vehicle.app
 Stockholm	Secure Element in Apple SoCs, a processor running crypto protocols on keys it protects; used for Apple Pay and Car Key; related codenames: Icefall, Warsaw
 Storage Management	freeing up disk space by managing bulky items; UI in System Information.app; StorageManagement.framework; launchd service: com.apple.diskspaced; extension point: com.apple.storagemanagement; extends Cache Delete service
 Suggestions	semantic analysis of mails and websites to suggest contacts, calendar events and the like; launchd services: com.apple.suggestd, com.apple.reversetemplated; custom JavaScript parsers in /System/Library/AssetsV2/com_apple_MobileAsset_CoreSuggestions
@@ -363,6 +364,7 @@ Viceroy	video conferencing used by FaceTime and ReplayKit; ViceroyTrace.framewor
 Virtualisation	running virtual machines on macOS; Hypervisor.framework (for basic VMs and vCPUs), Virtualization.framework (brings a robust set of device models)
 VSDB	volume status database; /var/db/volinfo.database; command line tool: vsdbutil
 Waldo	selects edge servers based on approximate location, part of Private Relay, seen in NSP
+Wally	private search in server-side database using homomorphic encryption; private information retrieval (PIR), private nearest neighbor search (PNNS); used for Caller ID, email logos, adult website filtering, points-of-interest lookup for photos
 WFS	WebDAV File Sharing; built-in file sharing with Apache; /etc/wfs; command line tool: wfsctl
 Widgets	content excerpt from apps; provided via a timeline of view hierarchies, configuration uses Intents; visible on home screen, lock screen, as live activities, as watch complications; WidgetKit.framework, ChronoServices.framework; extension point: com.apple.widgetkit-extension; launchd service: com.apple.chronod (timeline management and sync)
 Willow	HomeKit; end-to-end-encrypted communication protocol and API for IoT-accessories; pairing with SRP using code printed on device, credential sync by CKKS, transported over Alloy, remote access using Apple TV as proxy; launchd service: com.apple.homed
