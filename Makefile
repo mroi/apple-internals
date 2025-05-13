@@ -74,7 +74,7 @@ $(DB_TARGETS)::
 		exit 1 ; \
 	fi
 
-dyld: /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_x86_64h /System/Cryptexes/OS/System/DriverKit/System/Library/dyld/dyld_shared_cache_x86_64h
+dyld: /System/Cryptexes/OS/System/Library/dyld/dyld_shared_cache_arm64e /System/Cryptexes/OS/System/DriverKit/System/Library/dyld/dyld_shared_cache_arm64e
 	for i in $+ ; do $(DSCEXTRACTOR) $$i $@ ; done > /dev/null
 	find $@ -type f -print0 | xargs -0 chmod a+x
 
@@ -132,12 +132,13 @@ db_binaries:: dyld
 	$(call find,-follow -type f -perm +111) | while read -r os path ; do \
 		echo "UPDATE files SET executable = true WHERE os = '$$os' AND path = '$$(echo "$$path" | sed "s/'/''/g")';" ; \
 		if test -r "$(call prefix,$$os)$$path" && file --no-dereference --brief --mime-type "$(call prefix,$$os)$$path" | grep -Fq application/x-mach-binary ; then \
-			objdump --macho --dylibs-used "$(call prefix,$$os)$$path" | \
+			case "$$(lipo -archs "$(call prefix,$$os)$$path")" in (*arm64e*) arch=arm64e ;; (*arm64_32*) arch=arm64_32 ;; (*arm64*) arch=arm64 ;; (*x86_64h*) arch=x86_64h ;; (*x86_64*) arch=x86_64 ;; (*) continue ;; esac ; \
+			objdump --arch=$$arch --macho --dylibs-used "$(call prefix,$$os)$$path" | \
 				sed "1d;s/^.//;s/ ([^)]*)$$//;s/'/''/g;s|.*|INSERT OR IGNORE INTO linkages $(call file,'&');|" ; \
 			codesign --display --xml --entitlements - "$(call prefix,$$os)$$path" 2> /dev/null | \
 				plutil -convert json - -o - | \
 				sed "/^<stdin>: Property List error/d;/^{}/d;s/'/''/g;s|.*|INSERT INTO entitlements $(call file,json('&'));\n|" ; \
-			strings -n 8 "$(call prefix,$$os)$$path" | \
+			strings -n 8 "$(call prefix,$$os)$$path" 2> /dev/null | \
 				LANG=C sed "s/'/''/g;s|.*|INSERT OR IGNORE INTO strings $(call file,'&');|" ; \
 		fi ; \
 	done

@@ -231,7 +231,7 @@ Notarization	app security scan by Apple; cryptographic proof stapled to code sig
 Noticeboard	User Notifications for Software Update and App Store, Noticeboard.framework; launchd services: com.apple.noticeboard.state (nbstated), com.apple.noticeboard.agent (nbagent)
 Notifications	system notification bus, unrelated to the local/remote push notifications; launchd service: com.apple.notifyd, com.apple.kuncd (invoked by kernel through host special port 10); command line tool: notifyutil; complemented by framework-level notification system (CFNotification, NSNotification); launchd services: com.apple.distnoted.xpc.daemon, com.apple.distnoted.xpc.agent
 NSP	Network Service Proxy; per-app VPN and proxy settings, implements Private Relay; launchd service: com.apple.networkserviceproxy
-OAH	Rosetta; ahead-of-time compiler for Intel code on Apple Silicon, usable from Linux VMs by way of a custom binformat; /usr/libexec/rosetta; launchd service: com.apple.oahd
+OAH	Rosetta; ahead-of-time compiler for Intel code on Apple Silicon, usable from Linux VMs by way of a custom binformat; /usr/libexec/rosetta, /var/db/oah (AOT cache); launchd service: com.apple.oahd
 ODR	On-Demand Resources; loaded from App Store; launchd service: com.apple.appstored
 Omni Search	fuzzy semantic search with results recognized in images; OmniSearch.framework
 Onboarding	data protection splash screen shown by service-connected apps; /System/Library/OnBoardingBundles; OnBoardingKit.framework
@@ -358,7 +358,7 @@ USD	Universal Scene Description; storage format for 3D assets; /usr/lib/usd; com
 User Activity	abstraction for deep-linking into apps with structured context (people, places); used for Universal Links (schema.org on websites), Handoff, Parsec (app links in search), Quick Note (context awareness); now part of Intents; UserActivity.framework; launchd service: com.apple.coreservices.useractivityd
 User Notifications	user interface for notification center; launchd service: com.apple.usernoted
 UTI	Uniform Type Identifiers; system for document types; file extensions and MIME types are mapped to UTIs, UTIs form a conformance graph, apps register their UTIs with Launch Services; /System/Library/CoreServices/CoreTypes.bundle; also Apple’s hardware devices are represented as UTIs
-VA	Video Acceleration; AppleGVA.framework, AppleVA.framework, AppleVPA.framework
+VA	Video Acceleration; AppleVA.framework
 VDAF	Verifiable Distributed Aggregation Function; part of Differential Privacy; VDAF.framework
 Viceroy	video conferencing used by FaceTime and ReplayKit; ViceroyTrace.framework
 Virtualisation	running virtual machines on macOS; Hypervisor.framework (for basic VMs and vCPUs), Virtualization.framework (brings a robust set of device models)

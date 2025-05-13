@@ -19,12 +19,12 @@
 		};
 	};
 	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snap-util }: {
-		packages.x86_64-darwin = let
-			xcode = nixpkgs.legacyPackages.x86_64-darwin.xcodeenv.composeXcodeWrapper {};
+		packages.aarch64-darwin = let
+			xcode = nixpkgs.legacyPackages.aarch64-darwin.xcodeenv.composeXcodeWrapper {};
 		in {
 
 			acextract =
-				with nixpkgs.legacyPackages.x86_64-darwin;
+				with nixpkgs.legacyPackages.aarch64-darwin;
 				let xcodeHook = makeSetupHook {
 					name = "xcode-hook";
 					propagatedBuildInputs = [ xcode ];
@@ -79,7 +79,7 @@
 				};
 
 			dsc-extractor =
-				with nixpkgs.legacyPackages.x86_64-darwin;
+				with nixpkgs.legacyPackages.aarch64-darwin;
 				stdenv.mkDerivation {
 					name = "dsc-extractor-${lib.substring 0 8 self.inputs.dsc-extractor.lastModifiedDate}";
 					src = dsc-extractor;
@@ -87,7 +87,7 @@
 				};
 
 			snap-util =
-				with nixpkgs.legacyPackages.x86_64-darwin;
+				with nixpkgs.legacyPackages.aarch64-darwin;
 				let snapshot-header = fetchFromGitHub {
 					owner = "apple";
 					repo = "darwin-xnu";
