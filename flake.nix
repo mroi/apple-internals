@@ -29,7 +29,7 @@
 					name = "xcode-hook";
 					propagatedBuildInputs = [ xcode ];
 				} "${xcbuildHook}/nix-support/setup-hook";
-				in stdenv.mkDerivation {
+				in stdenvNoCC.mkDerivation {
 					name = "acextract-${lib.substring 0 8 self.inputs.acextract.lastModifiedDate}";
 					src = acextract;
 					nativeBuildInputs = [ xcodeHook ];
@@ -94,7 +94,7 @@
 					rev = "xnu-6153.141.1";
 					hash = "sha256-/2aR6n5CbUobwbxkrGqBOAhCZLwDdIsoIOcpALhAUF8=";
 				};
-				in stdenv.mkDerivation {
+				in stdenvNoCC.mkDerivation {
 					name = "snap-util-${lib.substring 0 8 self.inputs.snap-util.lastModifiedDate}";
 					src = snap-util;
 					nativeBuildInputs = [ xcode ];
