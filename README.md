@@ -26,6 +26,9 @@ and checks the internals text file against this information. Collected details i
 * launchd service descriptions and bundle Info.plist content
 * lists of assets inside asset catalogs
 
+To manually analyze and debug macOS, it can be helpful to temporarily [disable its security
+protections](https://gist.github.com/macshome/15f995a4e849acd75caf14f2e50e7e98).
+
 ___
 This work is licensed under the [MIT license](https://mit-license.org) so you can freely use 
 and share as long as you retain the copyright notice and license text.
