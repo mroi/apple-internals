@@ -19,6 +19,7 @@
 		};
 	};
 	outputs = { self, nixpkgs, acextract, command-line, dsc-extractor, snap-util }: {
+
 		packages.aarch64-darwin = let
 			xcode = nixpkgs.legacyPackages.aarch64-darwin.xcodeenv.composeXcodeWrapper {};
 		in {
@@ -99,7 +100,6 @@
 					src = snap-util;
 					nativeBuildInputs = [ xcode ];
 					preBuild = ''
-						unset DEVELOPER_DIR SDKROOT
 						NIX_CFLAGS_COMPILE='-idirafter ${snapshot-header}/bsd'
 					'';
 					installPhase = ''
@@ -137,5 +137,7 @@
 					'';
 				};
 		};
+
+		checks = self.packages;
 	};
 }
