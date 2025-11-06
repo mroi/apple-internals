@@ -113,7 +113,9 @@
 								echo 'snapUtil requires SIP and AMFI to be disabled:'
 								echo '• boot recovery system'
 								echo '• run ‘csrutil disable’'
+								echo '• boot into macOS again'
 								echo '• run ‘nvram boot-args=amfi_get_out_of_my_way=0x1’'
+								echo '• reboot so boot-args is effective'
 								exit 1
 							fi
 						EOF
