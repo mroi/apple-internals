@@ -136,8 +136,8 @@ db_binaries:: dyld
 			objdump --arch=$$arch --macho --dylibs-used "$(call prefix,$$os)$$path" | \
 				sed "1d;s/^.//;s/ ([^)]*)$$//;s/'/''/g;s|.*|INSERT OR IGNORE INTO linkages $(call file,'&');|" ; \
 			codesign --display --xml --entitlements - "$(call prefix,$$os)$$path" 2> /dev/null | \
-				plutil -convert json - -o - | \
-				sed "/^<stdin>: Property List error/d;/^{}/d;s/'/''/g;s|.*|INSERT INTO entitlements $(call file,json('&'));\n|" ; \
+				plutil -convert json - -o - 2> /dev/null | \
+				sed "/^{}/d;s/'/''/g;s|.*|INSERT INTO entitlements $(call file,json('&'));\n|" ; \
 			strings -n 8 "$(call prefix,$$os)$$path" 2> /dev/null | \
 				LANG=C sed "s/'/''/g;s|.*|INSERT OR IGNORE INTO strings $(call file,'&');|" ; \
 		fi ; \
@@ -148,8 +148,8 @@ db_manifests::
 	echo 'DROP TABLE IF EXISTS info;'
 	echo 'CREATE TABLE info (id INTEGER REFERENCES files, plist JSON);'
 	$(call find,-type f -name 'Info.plist') | while read -r os path ; do \
-		test -r "$(call prefix,$$os)$$path" && plutil -convert json "$(call prefix,$$os)$$path" -o - | \
-			sed "/: invalid object/d;s/'/''/g;s|.*|INSERT INTO info $(call file,json('&'));\n|" ; \
+		test -r "$(call prefix,$$os)$$path" && plutil -convert json "$(call prefix,$$os)$$path" -o - 2> /dev/null | \
+			sed "s/'/''/g;s|.*|INSERT INTO info $(call file,json('&'));\n|" ; \
 	done
 	$(call find,-type f -name 'TemplateInfo.plist') | while read -r os path ; do \
 		test -r "$(call prefix,$$os)$$path" && { \
@@ -159,8 +159,8 @@ db_manifests::
 			PlistBuddy -c 'Print Options:0:Units:Swift:Definitions:Info.plist\:NSExtension' "$(call prefix,$$os)$$path" ; \
 			PlistBuddy -c 'Print Options:0:Units:Swift:Definitions:Info.plist\:EXAppExtensionAttributes' "$(call prefix,$$os)$$path" ; \
 			echo '</dict>' ; \
-		} 2> /dev/null | plutil -convert json - -o - | \
-			sed "/Property List error:/d;s/'/''/g;s|.*|INSERT INTO info $(call file,json('&'));\n|" ; \
+		} 2> /dev/null | plutil -convert json - -o - 2> /dev/null | \
+			sed "s/'/''/g;s|.*|INSERT INTO info $(call file,json('&'));\n|" ; \
 	done
 
 db_assets::

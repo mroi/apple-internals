@@ -51,9 +51,9 @@ Attestation	cryptographic proof of a genuine SEP; used for web authentication an
 Authorization	discretionary access control policies for high-level services; similar to PAM; policy stored in /var/db/auth.db
 Avatar	Memoji and Animoji, including pre-rendered iMessage stickers; AvatarKit.framework
 AVB	Audio Video Bridging, low-latency audio over Ethernet; launchd service: com.apple.avbdeviced; command line tools: avbanalyse, avbdiagnose, avbutil
-AWD	Apple Wireless Diagnostics, sends system telemetry to Apple; CoreAnalytics.framework, WirelessDiagnostics.framework; launchd services: com.apple.awdd, com.apple.analyticsd
+AWD	Apple Wireless Diagnostics, sends system telemetry to Apple; CoreAnalytics.framework, WirelessDiagnostics.framework; launchd services: com.apple.analyticsd
 AWDL	Apple Wireless Direct Link; secondary WiFi interface that runs in parallel to an active WiFi access point connection, similar to WiFi Direct (p2p interface), uses a randomized MAC, used for peer-to-peer networking: AirDrop, AirPlay; DeviceToDeviceManager.framework
-Background Assets	assets that an app extension loads without the app being launched; BackgroundAssets.framework; extension point: com.apple.background-asset-downloader-extension; launchd service: com.apple.backgroundassets.user
+Background Assets	assets that an app extension loads without the app being launched; BackgroundAssets.framework; launchd service: com.apple.backgroundassets.user
 Bezel	on-screen overlays for hardware volume buttons, screen brightness, Bluetooth HID, and others; /Library/Application Support/Apple/BezelServices, launchd services: com.apple.loginwindow, com.apple.OSDUIHelper
 Bifrost	emergency satellite connectivity; /System/Library/LocationBundles/Bifrost.bundle
 Biome	CloudKit-synced streaming and storage of events like donated and invoked Intents; semantic index to ground AI with personal context; BiomeStreams.framework, BiomeSync.framework; launchd services: com.apple.BiomeAgent, com.apple.biomesyncd; embedding vector extraction and storage: ZeoliteFramework.framework
@@ -137,7 +137,7 @@ FDR	Factory Data/Device Reset? ensures that no downgrades are performed? servers
 Feldspar	Apple News; Silex.framework
 FiDES	Fi? Distributed Evaluation Service? aggregates Differential Privacy data for unlinkability? used for emoji, Suggestions, Dictation; /System/Library/DistributedEvaluation; DistributedEvaluation.framework, FedStats.framework (private federated learning?)
 File Provider	infrastructure and extension system for syncing with cloud providers; placeholder files based on SF_DATALESS attribute in APFS; FileProvider.framework; locally stored in ~/Library/CloudStorage; command line tool: fileproviderctl
-Find My	location sharing by explicitly querying devices remotely or collateral beacon detection using Search Party; FMCore.framework, FMF.framework; launchd service: com.apple.icloud.fmfd (find my friends)
+Find My	location sharing by explicitly querying devices remotely or collateral beacon detection using Search Party; FMCore.framework, FMF.framework
 Firmlink	bi-directional non-symbolic link between the read-only system volume and the data volume, additional symlinks and mountpoints in the root directory are virtually allocated; /usr/share/firmlinks, /etc/synthetic.conf
 Focus	restriction modes for notification presentation; focus filters for in-app display restrictions, communicated by Intents; Focus.framework, DoNotDisturb.framework; local settings in ~/Library/DoNotDisturb
 FollowUp	user interaction for Secure Backup wrapping with device passcode, CoreFollowUp.framework; launchd service: com.apple.followupd
@@ -154,7 +154,6 @@ GroupKit	groups of IDS users with shared CloudKit (PCS) access; GroupKitCrypto.f
 GSS	Generic Security Service; part of Kerberos; GSS.framework; launchd service: com.apple.gssd (invoked by kernel through host special port 19); command line tool: gsstool
 GXF	Guarded Execution Feature/Fault, additional exception levels on Apple Silicon, lateral to the usual exception levels; page tables remain the same, but interpretation of permission bits changes by way of FPR, genter and gexit instructions; implements lightweight intra-address-space protection contexts
 HAP	Home Automation Protocol; CoreHAP.framework
-HDA	High Definition Audio; HDAInterface.framework
 HDI	Hard Disk Image; command line tool: hdiutil
 HeadBoard	derivative of SpringBoard for tvOS home screen; /Applications/HeadBoard.app, /Applications/PineBoard.app
 Health Balance	vitals app on Watch; /Applications/NanoHealthBalance.app
@@ -225,6 +224,7 @@ Multipeer Connectivity	ad-hoc networking; Bonjour for discovery; WiFi, AWDL, Blu
 Nano	prefix for watchOS
 Nearby Interaction	proximity-based interaction between devices; proximity measured using ultra wideband or derived from other technologies; used for Universal Control, tapping phones for AirDrop; NearbyInteraction.framework, Proximity.framework; launchd services: com.apple.aonsensed (always-on sense daemon), com.apple.nearbyd
 Nebula	sleep apnea detection on watchOS; BreathingAlgorithms.framework
+New Device Outreach	high-level Bluetooth device pairing flow; NewDeviceOutreach.framework, NDOAPI.framework, NDOUI.framework; launchd service: com.apple.ndoagent
 Newton	fall detection on watchOS
 NLP	Natural Language Processing; NLP.framework; related to mecabra libraries, a linguistic engine for Chinese and Japanese; /usr/share/mecabra, /usr/share/tokenizer
 Notarization	app security scan by Apple; cryptographic proof stapled to code signature, tested at launch by System Policy; for non-notarized apps sends code hash to Apple; command line tools: notarytool, altool, stapler
@@ -347,7 +347,7 @@ Tones	ringtones; ToneLibrary.framework
 Translocation	app binary copied on launch to dedicated location; initiated by Launch Services for security (prevents path traversal for apps quarantined by System Policy) or path normalization (iOS apps do not expect to be moved, but can be moved on macOS)
 Transparency	un-alterable append-only log to publish information; used for for ESS keys and PCC software hashes, based on CONIKS, devices audit IDS/PCC records against logs, root hashes gossiped over iMessage to detect split-view attacks; Transparency.framework; launchd service: com.apple.transparencyd; server: init-kt.apple.com
 TSS	Tatsu Signing Server; online verification for firmware signatures; server: gs.apple.com
-TTS	Text To Speech, neural-network-based synthesis engine (Gryphon); command line tool: say; /System/Library/Speech, /System/Library/TTSPlugins
+TTS	Text To Speech, neural-network-based synthesis engine (Gryphon); command line tool: say; /System/Library/Speech
 TVML	TV Markup Language; declarative UI language for TV apps; TVMLKit.framework
 UARP	Universal Accessory Restore Protocol; CoreUARP.framework; launchd service: com.apple.uarppersonalizationd (personalized firmware)
 Ubiquity	iCloud Drive; codename Bladerunner, uses CloudKit; CloudDocs.framework; launchd service: com.apple.bird; locally stored in ~/Library/Mobile Documents (was supposed to move to Library/CloudStorage/iCloud Drive but this was reverted)
