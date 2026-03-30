@@ -3,6 +3,8 @@ MY_INTERNALS = $(HOME)/Library/Mobile\ Documents/com~apple~TextEdit/Documents/Ap
 DB_TARGETS = db_files db_restricted db_binaries db_manifests db_assets db_services
 CHECK_TARGETS = check_files check_binaries check_manifests check_services
 
+SHELL = caffeinate sh
+
 .PHONY: all check view sqlite $(DB_TARGETS) $(CHECK_TARGETS)
 .INTERMEDIATE: $(DB)
 
