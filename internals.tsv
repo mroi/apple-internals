@@ -13,7 +13,7 @@ Activation	cryptographic check-in with iCloud to lock devices reported by the us
 Activity	jobs, coarse-grained work units of applications; tracked by the system across XPC, bears a QoS class for scheduling; low-level mechanism not to be confused with User Activity
 AE	Apple Events; messaging system to invoke application functionality; CoreServices.framework/AE.framework; launchd services: com.apple.coreservices.appleevents, com.apple.AEServer (AE over network)
 Aegir	astronomy watch face and lock screen; /System/Library/CoreServices/AegirProxyApp.app
-AFM	Apple Foundation Model; pre-trained transformer and diffusion models for Greymatter, optimized for on-device use by quantization (with accuracy-recovery adapters) and palletization; command line tool: modelcatalogdump
+AFM	Apple Foundation Model; pre-trained transformer and diffusion models for Greymatter, optimized for on-device use by quantization (with accuracy-recovery adapters) and palletization; command line tool: modelcatalogdump; /System/Library/AssetsV2/com_apple_MobileAsset_UAF_FM_GenerativeModels, /System/Library/AssetsV2/com_apple_MobileAsset_UAF_FM_Visual
 AGC	Apple Graphics Control, management of multiple displays and display port connections; launchd service: com.apple.displaypolicyd
 AHAP	Apple Haptic Audio Pattern; file format for simultaneous audio and haptic data; CoreHaptics.framework
 AIR	Apple Intermediate Representation; synthetic bytecode architecture target for GPU binary toolchain
@@ -74,6 +74,7 @@ CDHash	Code Directory Hash; a hash of hashes over the parts of a code bundle; co
 CDM	Continuous Dialog Manager; natural dialog with Siri, MARRS for multi-modality; ContinuousDialogManagerService.framework
 CEC	Consumer Electronics Control; remote control for HDMI-connected devices; CoreRC.framework, IOCEC.framework
 Celestial	media streaming used by ReplayKit for in-app screen broadcasts; Celestial.framework; launchd service: com.apple.replayd
+Centauri	Apple WiFi and Bluetooth chip; Centauri.framework; launchd service: com.apple.centaurid
 Certificates	validity checked using CRLs, OCSP stapling, and transparency logs; /System/Library/Security/Certificates.bundle; launchd services: com.apple.trustd, com.apple.trustd.agent, com.apple.ocspd; command line tool: crlrefresh
 Chamois	Stage Manager
 CHIP	Connected Home over IP; Matter; integrated into HomeKit, can use Thread as transport layer; HomeKitMatter.framework, CoreThread.framework; launchd services: com.apple.threadradiod, com.apple.ThreadCommissionerService
@@ -134,7 +135,7 @@ FaceTime	video calls, employs the ICE (establishing peer-to-peer connection), ST
 FairPlay	DRM system used by app and media stores; CoreADI.framework, CoreFP.framework, CoreLSKD.framework; launchd services: com.apple.adid, com.apple.fairplayd (invoked by kernel through host special port 17), com.apple.lskdd; credentials stored in /var/db/fpsd
 Family Circle	Family Sharing; launchd services: com.apple.familycircled, com.apple.askpermissiond
 FDE	Full Disk Encryption, FileVault; command line tool: fdesetup, sysadminctl
-FDR	Factory Data/Device Reset? ensures that no downgrades are performed? servers: skl.apple.com, gg.apple.com; /System/Library/FDR
+FDR	Factory Data Restore; involves recovery partition, ensures that no downgrades are performed, servers: skl.apple.com, gg.apple.com; /System/Library/FDR
 Feldspar	Apple News; Silex.framework
 FiDES	Fi? Distributed Evaluation Service? aggregates Differential Privacy data for unlinkability? used for emoji, Suggestions, Dictation; /System/Library/DistributedEvaluation; DistributedEvaluation.framework, FedStats.framework (private federated learning?)
 File Provider	infrastructure and extension system for syncing with cloud providers; placeholder files based on SF_DATALESS attribute in APFS; FileProvider.framework; locally stored in ~/Library/CloudStorage; command line tool: fileproviderctl
@@ -226,7 +227,7 @@ Mondrian	photo collage arrangement in Photos.app; Mondrian.framework, GridZero.f
 MRT	Malware Removal Tool; /Library/Apple/System/Library/CoreServices/MRT.app; superseded by XProtect
 Multipeer Connectivity	ad-hoc networking; Bonjour for discovery; WiFi, AWDL, Bluetooth, or Ethernet as transport; optional encryption and certificate-based authentication; MultipeerConnectivity.framework
 Nano	prefix for watchOS
-Nearby Interaction	proximity-based interaction between devices; proximity measured using ultra wideband or derived from other technologies; used for Universal Control, tapping phones for AirDrop; NearbyInteraction.framework, Proximity.framework; launchd services: com.apple.aonsensed (always-on sense daemon), com.apple.nearbyd
+Nearby Interaction	proximity-based interaction between devices; proximity measured using ultra wideband or derived from other technologies; used for Universal Control, tapping phones for AirDrop; NearbyInteraction.framework, Proximity.framework; launchd service: com.apple.nearbyd
 Nebula	sleep apnea detection on watchOS; BreathingAlgorithms.framework
 New Device Outreach	high-level Bluetooth device pairing flow; NewDeviceOutreach.framework, NDOAPI.framework, NDOUI.framework; launchd service: com.apple.ndoagent
 Newton	fall detection on watchOS
@@ -262,7 +263,7 @@ Peak Power	managing battery power draw; launchd service: com.apple.peakpowermana
 PEC/PIR	Private Encrypted Compute and Private Information Retrieval; used for parental controls for media and web; CipherML.framework; launchd service: com.apple.ciphermld
 Pegasus	meaning 1: picture-in-picture video playback; Pegasus.framework (iOS), PIP.framework (macOS); meaning 2: online search query engine for visual lookup; PegasusKit.framework
 People	contacts with Apple Accounts within Group Activities and Shared With You
-Persona	separation of sub-user-identities, like when using a private and managed Apple account; PersonaKit.framework; ~/Library/Personas; /System/Library/UserManagement; command line tool: umtool
+Persona	separation of sub-user-identities, like when using a private and managed Apple account; PersonaKit.framework; /System/Library/UserManagement; command line tool: umtool
 PHASE	Physical Audio Spatialization Engine; 3D sound rendering engine; Apple devices map audio sources (even mono and stereo) to virtual speakers in a 3D sound stage, which is simulated by the physical speakers via a head-related transfer function; PHASE.framework
 Piano Mover	Mail Drop; bulk mail attachments transfered over PCS; not to be confused with storage for iMessage attachments, which uses a CloudKit container
 Plugin	Extensions, XPC services bundled with apps or frameworks, discovery by Launch Services; extension points listed in /System/Library/ExtensionKit/ExtensionPoints; launchd service: com.apple.pluginkit.pkd; command line tool: pluginkit
@@ -326,7 +327,7 @@ Social Gaming	Game Center; multiplayer gaming services on top of CloudKit, share
 Sock Puppet	Watch interaction that requires Companion iPhone
 SOS	Secure Object Sync; syncing backend for iCloud Keychain, not to be confused with the emergency call feature; transferred items previously staged in Synced Defaults, for two-factor accounts in CKKS; launchd services: com.apple.secd (access to local keychain), com.apple.security.cloudkeychainproxy3 (connects to Synced Defaults), com.apple.security.keychain-circle-notification
 SPI	System Private Interface; /System/Library/PrivateFrameworks
-Splat Update	Rapid Security Response, updates to Cryptex components without system restart
+Splat Update	Rapid Security Response, Background Security Improvements, updates to Cryptex components without system restart
 SpringBoard	iOS home screen; like Dock (Launchpad, Mission Control, desktop picture), Control Center, SystemUIServer (menu extras icons), loginwindow (lock screen), and WindowServer (compositor) on macOS; /System/Library/CoreServices/SpringBoard.app, /Applications/PreBoard.app, BaseBoard.framework, FrontBoard.framework, SplashBoard.framework; launchd service: com.apple.backboardd (compositor)
 SPRR	Shadow Permission Remap Register? feature of Apple Silicon to dynamically reintepret page permissions
 SPTM	Secure Page Table Monitor; code in kernel-level GXF protects page table modifications; Trusted Execution Monitor (TXM) in user-level GXF implements policy and parts of AMFI
@@ -352,6 +353,7 @@ Template App	code-less app-bundle, passed to an actual executable by LauncServic
 Time Machine	automatic backup service, command line tools: tmdiagnose, tmutil
 Tin Can	Walkie Talkie on watchOS; /Applications/TinCan.app
 Tones	ringtones; ToneLibrary.framework
+ToolKit	tool calling for Greymatter like Model Context Protocol; ToolKit.framework; launchd service: com.apple.toolkitd
 Translocation	app binary copied on launch to dedicated location; initiated by Launch Services for security (prevents path traversal for apps quarantined by System Policy) or path normalization (iOS apps do not expect to be moved, but can be moved on macOS)
 Transparency	un-alterable append-only log to publish information; used for for ESS keys and PCC software hashes, based on CONIKS, devices audit IDS/PCC records against logs, root hashes gossiped over iMessage to detect split-view attacks; Transparency.framework; launchd service: com.apple.transparencyd; server: init-kt.apple.com
 TSS	Tatsu Signing Server; online verification for firmware signatures; server: gs.apple.com
@@ -361,6 +363,7 @@ UARP	Universal Accessory Restore Protocol; CoreUARP.framework; launchd service: 
 Ubiquity	iCloud Drive; codename Bladerunner, uses CloudKit; CloudDocs.framework; launchd service: com.apple.bird; locally stored in ~/Library/Mobile Documents (was supposed to move to Library/CloudStorage/iCloud Drive but this was reverted)
 UID	unique ID key, used as root key for cryptographic subsystems, generated during manufacturing by SEP and fused into hardware, only accessible by SEP
 Unified Logging	system-wide logging and Activity tracking; launchd service: com.apple.logd, com.apple.diagnosticd; command line tool: log; /dev/oslog; data stored in /var/db/diagnostics, support files in /var/db/uuidtext
+Unilog	telemetry collection and upload for Greymatter services like Biome, Siri, Mail search; UnilogCommonLibrary.framework, UnilogTelemetry.framework
 Urchin	Tides app on watchOS; /Applications/Urchin.app
 USD	Universal Scene Description; storage format for 3D assets; /usr/lib/usd; command line tools: usdcat, usdchecker, usdcrush, usdextract, usdrecord, usdtree, usdzip
 User Activity	abstraction for deep-linking into apps with structured context (people, places); used for Universal Links (schema.org on websites), Handoff, Parsec (app links in search), Quick Note (context awareness); now part of Intents; UserActivity.framework; launchd service: com.apple.coreservices.useractivityd
