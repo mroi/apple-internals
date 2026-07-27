@@ -5,7 +5,7 @@ CHECK_TARGETS = check_files check_binaries check_manifests check_services
 
 SHELL = caffeinate sh
 
-.PHONY: all check view sqlite $(DB_TARGETS) $(CHECK_TARGETS)
+.PHONY: all check review view sqlite $(DB_TARGETS) $(CHECK_TARGETS)
 .INTERMEDIATE: $(DB)
 
 all: $(DB).lz check
@@ -33,6 +33,9 @@ endif
 check: internals.tsv
 	@(head --lines=1 ; LANG=en sort --ignore-case) < $< | diff -uw $< -
 	@$(MAKE) --silent --jobs=1 $(CHECK_TARGETS)
+
+review: internals.tsv
+	@sed 1d $< | sort -R | head -n1
 
 define VIEW
 SELECT path,os FROM files WHERE restricted IS NULL;
